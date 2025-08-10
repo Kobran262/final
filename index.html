@@ -1,0 +1,3106 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Среħа 2024 - Система управления документами</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #f8f9fa, #e9ecef); min-height: 100vh; padding: 20px; color: #212529; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); overflow: hidden; border: 2px solid #dee2e6; }
+        .header { background: linear-gradient(135deg, #212529, #343a40); color: white; padding: 30px; display: flex; align-items: center; gap: 20px; }
+        .header h1 { font-size: 32px; margin-bottom: 10px; font-weight: 700; }
+        .header p { opacity: 0.9; font-size: 16px; }
+        .logo { width: 80px; height: 80px; background: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; color: #212529; }
+        .nav-tabs { display: flex; background: #f8f9fa; border-bottom: 3px solid #dee2e6; }
+        .nav-tab { flex: 1; padding: 20px; text-align: center; background: none; border: none; cursor: pointer; font-size: 16px; font-weight: 600; color: #495057; transition: all 0.3s ease; }
+        .nav-tab.active { background: white; color: #212529; border-bottom: 3px solid #212529; }
+        .nav-tab:hover:not(.active) { background: #e9ecef; }
+        .tab-content { display: none; padding: 30px; min-height: 600px; }
+        .tab-content.active { display: block; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #212529; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; transition: all 0.3s ease; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #212529; box-shadow: 0 0 0 3px rgba(33, 37, 41, 0.1); }
+        .btn { padding: 12px 24px; border: 2px solid transparent; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-right: 10px; margin-bottom: 10px; text-transform: uppercase; }
+        .btn-primary { background: #212529; color: white; border-color: #212529; }
+        .btn-primary:hover { background: #343a40; }
+        .btn-success { background: #6c757d; color: white; border-color: #6c757d; }
+        .btn-success:hover { background: #5a6268; }
+        .btn-danger { background: white; color: #212529; border-color: #212529; }
+        .btn-danger:hover { background: #212529; color: white; }
+        .btn-secondary { background: white; color: #6c757d; border-color: #6c757d; }
+        .btn-secondary:hover { background: #6c757d; color: white; }
+        .table-container { background: #f8f9fa; border-radius: 12px; padding: 20px; margin-top: 20px; max-height: 400px; overflow-y: auto; }
+        .table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
+        .table th { background: #212529; color: white; padding: 15px 10px; text-align: left; font-weight: 600; }
+        .table td { padding: 12px 10px; border-bottom: 1px solid #dee2e6; }
+        .table tr:hover { background: #f8f9fa; }
+        .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: linear-gradient(135deg, #212529, #343a40); color: white; padding: 25px; border-radius: 12px; text-align: center; }
+        .stat-number { font-size: 32px; font-weight: bold; margin-bottom: 8px; }
+        .stat-label { font-size: 14px; opacity: 0.9; }
+        .chart-container { background: white; border-radius: 12px; padding: 25px; margin-bottom: 30px; border: 2px solid #e9ecef; }
+        .chart-title { font-size: 20px; font-weight: bold; color: #212529; margin-bottom: 20px; text-align: center; }
+        .filter-section { background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 30px; border: 2px solid #e9ecef; }
+        .invoice-list { background: white; border-radius: 12px; padding: 20px; margin-top: 20px; border: 2px solid #e9ecef; }
+        .invoice-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #e9ecef; transition: background 0.3s ease; }
+        .invoice-item:hover { background: #f8f9fa; }
+        .invoice-item:last-child { border-bottom: none; }
+        .invoice-info { flex: 1; }
+        .invoice-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .invoice-status { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; background: #212529; color: white; }
+        .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 2px solid; position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; }
+        .alert-success { background: #f8f9fa; color: #212529; border-color: #6c757d; }
+        .alert-danger { background: #f8f9fa; color: #212529; border-color: #212529; }
+        .section-card { background: white; border-radius: 12px; padding: 25px; margin-bottom: 25px; border: 2px solid #e9ecef; }
+        .company-info { background: #f8f9fa; border-radius: 12px; padding: 20px; margin-bottom: 30px; border: 2px solid #e9ecef; }
+        .invoice-items { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 15px; align-items: end; padding: 15px; background: #f8f9fa; border-radius: 8px; margin-bottom: 15px; }
+        .delivery-items { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 15px; align-items: end; padding: 15px; background: #f8f9fa; border-radius: 8px; margin-bottom: 15px; }
+        .totals { margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 8px; border: 2px solid #dee2e6; }
+        .totals-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 16px; }
+        .totals-final { display: flex; justify-content: space-between; font-size: 20px; font-weight: bold; color: #212529; margin-top: 15px; padding-top: 15px; border-top: 2px solid #212529; }
+        .preview { background: white; border: 2px solid #dee2e6; border-radius: 12px; padding: 30px; margin-top: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .searchable-select {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        .searchable-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+        .searchable-input:focus {
+            outline: none;
+            border-color: #212529;
+            box-shadow: 0 0 0 3px rgba(33, 37, 41, 0.1);
+        }
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+        .dropdown-item {
+            padding: 10px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #f1f3f4;
+            font-size: 14px;
+        }
+        .dropdown-item:hover {
+            background: #f8f9fa;
+        }
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+        .dropdown-item.selected {
+            background: #212529;
+            color: white;
+        }
+        @media (max-width: 768px) {
+            .nav-tabs { flex-direction: column; }
+            .nav-tab { min-width: 100%; }
+            .form-grid { grid-template-columns: 1fr; }
+            .invoice-items { grid-template-columns: 1fr; }
+            .delivery-items { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://i.ibb.co/tMCT4jb7/srb-white-verical.png" alt="srb-white-verical" border="0" style="width: 80px; height: auto; border-radius: 12px;">
+            <div>
+                <h1>Среħа 2024 ДОО</h1>
+                <p>Система управления инвойсами и отпремницами</p>
+                <p style="font-size: 14px; opacity: 0.8;">Београд, Стари Град, Мајке Јевросиме 35 | МБ: 22019309 | ПИБ: 114407658</p>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('clients')">Клиенты</button>
+            <button class="nav-tab" onclick="showTab('products')">Товары</button>
+            <button class="nav-tab" onclick="showTab('invoice')">Создать инвойс</button>
+            <button class="nav-tab" onclick="showTab('delivery')">Создать отпремницу</button>
+            <button class="nav-tab" onclick="showTab('statistics')">Статистика продаж</button>
+        </div>
+
+        <!-- Клиенты -->
+        <div id="clients" class="tab-content active">
+            <h2>Управление клиентами</h2>
+            <div class="form-grid">
+                <div>
+                    <div class="form-group">
+                        <label>Название компании *</label>
+                        <input type="text" id="clientName" placeholder="Название компании">
+                    </div>
+                    <div class="form-group">
+                        <label>Матични број *</label>
+                        <input type="text" id="clientMB" placeholder="Матични број">
+                    </div>
+                    <div class="form-group">
+                        <label>ПИБ *</label>
+                        <input type="text" id="clientPIB" placeholder="ПИБ">
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="manualAddressInput" style="width: auto;">
+                            Ввести адрес вручную
+                        </label>
+                    </div>
+                    
+                    <!-- Автоматический ввод адреса -->
+                    <div id="automaticAddressSection">
+                        <div class="form-group">
+                            <label>Город *</label>
+                            <div class="searchable-select">
+                                <input type="text" class="searchable-input" id="clientCity" placeholder="Введите название города..." autocomplete="off">
+                                <div class="dropdown-menu" id="clientCityDropdown"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Община *</label>
+                            <div class="searchable-select">
+                                <input type="text" class="searchable-input" id="clientMunicipality" placeholder="Выберите сначала город..." autocomplete="off" disabled>
+                                <div class="dropdown-menu" id="clientMunicipalityDropdown"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Улица *</label>
+                            <div class="searchable-select">
+                                <input type="text" class="searchable-input" id="clientStreet" placeholder="Выберите сначала общину..." autocomplete="off" disabled>
+                                <div class="dropdown-menu" id="clientStreetDropdown"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Номер дома</label>
+                            <input type="text" id="clientHouseNumber" placeholder="Номер дома">
+                        </div>
+                    </div>
+                    
+                    <!-- Ручной ввод адреса -->
+                    <div id="manualAddressSection" style="display: none;">
+                        <div class="form-group">
+                            <label>Полный адрес *</label>
+                            <textarea id="clientManualAddress" placeholder="Введите полный адрес (например: Beograd, Stari grad, Knez Mihailova 5)" rows="3" style="resize: vertical;"></textarea>
+                            <small style="color: #666; font-size: 12px;">Укажите полный адрес в произвольной форме</small>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Контакт</label>
+                        <input type="text" id="clientContact" placeholder="Телефон, email">
+                    </div>
+                    <div class="form-group">
+                        <label>Банковский счет</label>
+                        <input type="text" id="clientBank" placeholder="Номер банковского счета">
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="addClient()">Добавить клиента</button>
+            <button class="btn btn-secondary" onclick="clearClientForm()">Очистить форму</button>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr><th>Название</th><th>МБ</th><th>ПИБ</th><th>Адрес</th><th>Контакт</th><th>Банк</th><th>Действия</th></tr>
+                    </thead>
+                    <tbody id="clientsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Товары -->
+        <div id="products" class="tab-content">
+            <h2>Управление товарами</h2>
+            <div class="form-grid">
+                <div>
+                    <div class="form-group">
+                        <label>Код товара *</label>
+                        <input type="text" id="productCode" placeholder="GF-B-TG210">
+                    </div>
+                    <div class="form-group">
+                        <label>Название товара *</label>
+                        <input type="text" id="productName" placeholder="Tieguanyin/Zeleni Čaj 210g">
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label>Стоимость без НДС (RSD) *</label>
+                        <input type="number" id="productPrice" placeholder="0.00" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Категория</label>
+                        <select id="productCategory">
+                            <option value="">Выберите категорию</option>
+                            <option value="Zeleni Čaj">Зеленый чай</option>
+                            <option value="Crni Čaj">Черный чай</option>
+                            <option value="Printing">Полиграфия</option>
+                            <option value="Other">Другое</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="addProduct()">Добавить товар</button>
+            <button class="btn btn-secondary" onclick="clearProductForm()">Очистить форму</button>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr><th>Код</th><th>Название</th><th>Цена (RSD)</th><th>Категория</th><th>Действия</th></tr>
+                    </thead>
+                    <tbody id="productsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Создать инвойс -->
+        <div id="invoice" class="tab-content">
+            <h2>Создать инвойс</h2>
+            
+            <div class="company-info">
+                <h3>Поставщик</h3>
+                <p><strong>Среħа 2024 ДОО Београд (Стари Град)</strong></p>
+                <p>Матични број: 22019309 | ПИБ: 114407658</p>
+                <p>Седиште: Београд, Стари Град, Мајке Јевросиме 35</p>
+                <p>Рачун: 190-0000000085540-29 (Alta Banka)</p>
+            </div>
+
+            <div class="section-card">
+                <h3>Основные данные</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Номер инвойса *</label>
+                        <input type="text" id="invoiceNumber" placeholder="1-DDMMYYYY">
+                    </div>
+                    <div class="form-group">
+                        <label>Дата *</label>
+                        <input type="date" id="invoiceDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Срок оплаты *</label>
+                        <input type="date" id="invoiceDueDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Клиент *</label>
+                        <div class="searchable-select">
+                            <input type="text" class="searchable-input" id="invoiceClientSearch" placeholder="Введите название клиента..." autocomplete="off">
+                            <input type="hidden" id="invoiceClient" value="">
+                            <div class="dropdown-menu" id="invoiceClientDropdown"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Способ доставки</label>
+                        <select id="invoiceDelivery">
+                            <option value="сопствени превоз">Сопствени превоз</option>
+                            <option value="курирска служба">Курирская служба</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>НДС (%)</label>
+                        <select id="invoiceVAT">
+                            <option value="0">0%</option>
+                            <option value="20">20%</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="differentDeliveryAddress" style="width: auto;">
+                            Адрес доставки отличается от адреса седишта
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Адрес доставки -->
+            <div id="deliveryAddressSection" class="section-card" style="display: none;">
+                <h3>Адрес доставки</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Город *</label>
+                        <div class="searchable-select">
+                            <input type="text" class="searchable-input" id="deliveryCity" placeholder="Введите название города..." autocomplete="off">
+                            <div class="dropdown-menu" id="deliveryCityDropdown"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Община *</label>
+                        <div class="searchable-select">
+                            <input type="text" class="searchable-input" id="deliveryMunicipality" placeholder="Выберите сначала город..." autocomplete="off" disabled>
+                            <div class="dropdown-menu" id="deliveryMunicipalityDropdown"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Улица *</label>
+                        <div class="searchable-select">
+                            <input type="text" class="searchable-input" id="deliveryStreet" placeholder="Выберите сначала общину..." autocomplete="off" disabled>
+                            <div class="dropdown-menu" id="deliveryStreetDropdown"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Номер дома</label>
+                        <input type="text" id="deliveryHouseNumber" placeholder="Номер дома">
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h3>Товары</h3>
+                <div id="invoiceItems">
+                    <div class="invoice-items">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Товар *</label>
+                            <div class="searchable-select">
+                                <input type="text" class="searchable-input invoice-product-search" placeholder="Введите код или название товара..." autocomplete="off">
+                                <input type="hidden" class="invoice-product" value="">
+                                <div class="dropdown-menu invoice-product-dropdown"></div>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Количество</label>
+                            <input type="number" class="invoice-quantity" value="1" min="1">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Цена (RSD)</label>
+                            <input type="number" class="invoice-price" readonly style="background: #f8f9fa;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Сумма (RSD)</label>
+                            <input type="number" class="invoice-amount" readonly style="background: #f8f9fa; font-weight: bold;">
+                        </div>
+                        <div style="padding-top: 25px;">
+                            <button class="btn btn-danger" onclick="removeInvoiceItem(this)">Удалить</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-success" onclick="addInvoiceItem()">Добавить товар</button>
+                
+                <div class="totals">
+                    <div class="totals-row">
+                        <span>Подтотал:</span>
+                        <span id="invoiceSubtotal">0.00 RSD</span>
+                    </div>
+                    <div class="totals-row">
+                        <span>НДС:</span>
+                        <span id="invoiceVATAmount">0.00 RSD</span>
+                    </div>
+                    <div class="totals-final">
+                        <span>ИТОГО:</span>
+                        <span id="invoiceTotal">0.00 RSD</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <button class="btn btn-primary" onclick="generateInvoice()">Сгенерировать инвойс</button>
+                <button class="btn btn-success" onclick="confirmInvoice()">Утвердить инвойс</button>
+                <button class="btn btn-secondary" onclick="generateDeliveryFromInvoice()">Создать отпремницу</button>
+            </div>
+            
+            <div id="invoicePreview" class="preview" style="display: none;">
+                <h3>Предпросмотр инвойса</h3>
+                <div id="invoiceContent"></div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="exportInvoiceToPDF()">Экспорт PDF</button>
+                    <button class="btn btn-secondary" onclick="downloadInvoiceAsHTML()">Скачать HTML</button>
+                    <button class="btn btn-secondary" onclick="copyInvoiceToClipboard()">Копировать</button>
+                </div>
+                <div id="invoiceConfirmMessage" style="display: none; margin-top: 15px;" class="alert alert-success">
+                    Инвойс утвержден и добавлен в статистику продаж!
+                </div>
+            </div>
+        </div>
+
+        <!-- Создать отпремницу -->
+        <div id="delivery" class="tab-content">
+            <h2>Создать отпремницу</h2>
+            
+            <div class="company-info">
+                <h3>Отправитель</h3>
+                <p><strong>Среħа 2024 ДОО Београд (Стари Град)</strong></p>
+                <p>Матични број: 22019309 | ПИБ: 114407658</p>
+                <p>Седиште: Београд, Стари Град, Мајке Јевросиме 35</p>
+            </div>
+
+            <div class="section-card">
+                <h3>Основные данные</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Номер отпремницы *</label>
+                        <input type="text" id="deliveryNumber" placeholder="1-DDMMYYYY">
+                    </div>
+                    <div class="form-group">
+                        <label>Дата *</label>
+                        <input type="date" id="deliveryDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Срок поставки *</label>
+                        <input type="date" id="deliveryDueDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Получатель *</label>
+                        <div class="searchable-select">
+                            <input type="text" class="searchable-input" id="deliveryClientSearch" placeholder="Введите название получателя..." autocomplete="off">
+                            <input type="hidden" id="deliveryClient" value="">
+                            <div class="dropdown-menu" id="deliveryClientDropdown"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Способ доставки</label>
+                        <select id="deliveryMethod">
+                            <option value="сопствени превоз">Сопствени превоз</option>
+                            <option value="курирска служба">Курирская служба</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h3>Товары</h3>
+                <div id="deliveryItems">
+                    <div class="delivery-items">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Товар *</label>
+                            <div class="searchable-select">
+                                <input type="text" class="searchable-input delivery-product-search" placeholder="Введите код или название товара..." autocomplete="off">
+                                <input type="hidden" class="delivery-product" value="">
+                                <div class="dropdown-menu delivery-product-dropdown"></div>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Количество</label>
+                            <input type="number" class="delivery-quantity" value="1" min="1">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Единица</label>
+                            <input type="text" class="delivery-unit" value="ком" readonly>
+                        </div>
+                        <div style="padding-top: 25px;">
+                            <button class="btn btn-danger" onclick="removeDeliveryItem(this)">Удалить</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-success" onclick="addDeliveryItem()">Добавить товар</button>
+            </div>
+
+            <div style="text-align: center;">
+                <button class="btn btn-primary" onclick="generateDelivery()">Сгенерировать отпремницу</button>
+            </div>
+            
+            <div id="deliveryPreview" class="preview" style="display: none;">
+                <h3>Предпросмотр отпремницы</h3>
+                <div id="deliveryContent"></div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="printDelivery()">Экспорт PDF</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Статистика продаж -->
+        <div id="statistics" class="tab-content">
+            <h2>Статистика продаж</h2>
+            <div class="filter-section">
+                <h3>Фильтры</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Период с:</label>
+                        <input type="date" id="statsFromDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Период по:</label>
+                        <input type="date" id="statsToDate">
+                    </div>
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <div>
+                            <button class="btn btn-primary" onclick="updateStatistics()">Обновить</button>
+                            <button class="btn btn-success" onclick="exportStatisticsToPDF()">Скачать PDF</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalRevenue">0 RSD</div>
+                    <div class="stat-label">Общая выручка</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalInvoices">0</div>
+                    <div class="stat-label">Всего инвойсов</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalClients">0</div>
+                    <div class="stat-label">Клиентов</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="averageOrder">0 RSD</div>
+                    <div class="stat-label">Средний заказ</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">Выручка по месяцам</div>
+                <div id="revenueChart">График выручки будет отображен здесь</div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">Топ товаров по продажам</div>
+                <div id="productsChart">График продаж товаров будет отображен здесь</div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">Топ клиентов по выручке</div>
+                <div id="clientsChart">График клиентов будет отображен здесь</div>
+            </div>
+
+            <div class="invoice-list">
+                <h3>Утвержденные инвойсы</h3>
+                <div id="confirmedInvoicesList">
+                    <p style="text-align: center; color: #666;">Нет утвержденных инвойсов</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let clients = [], products = [], confirmedInvoices = [], currentInvoiceData = null;
+
+        // Полный список всех общин Сербии (независимо от города)
+        const allMunicipalities = [
+            // Београд - градске општине
+            "Barajevo", "Voždovac", "Vračar", "Grocka", "Zvezdara", "Zemun", "Lazarevac", 
+            "Mladenovac", "Novi Beograd", "Obrenovac", "Palilula", "Rakovica", "Savski venac", 
+            "Sopot", "Stari grad", "Surčin", "Čukarica",
+            
+            // Градови
+            "Novi Sad", "Niš", "Kragujevac", "Subotica", "Pančevo", "Čačak", "Novi Pazar", 
+            "Zrenjanin", "Leskovac", "Bor", "Valjevo", "Vranje", "Vršac", "Zaječar", 
+            "Jagodina", "Kikinda", "Kraljevo", "Kruševac", "Loznica", "Pirot", "Požarevac", 
+            "Priština", "Prokuplje", "Smederevo", "Sombor", "Sremska Mitrovica", "Užice", "Šabac",
+            
+            // Медијана, Палилула (Ниш)
+            "Medijana", "Pantelej", "Crveni Krst", "Niška Banja",
+            
+            // Врање
+            "Vranje grad", "Vranje selo",
+            
+            // Пожаревац
+            "Požarevac grad", "Kostolac",
+            
+            // Ужице
+            "Užice grad", "Sevojno",
+            
+            // Општине
+            "Aleksandrovac", "Aleksinac", "Aranđelovac", "Arilje", "Babušnica", "Bač", 
+            "Bačka Palanka", "Bačka Topola", "Bačko Gradište", "Bajina Bašta", "Bela Crkva", 
+            "Bela Palanka", "Beočin", "Blace", "Bogatić", "Bojnik", "Boljevac", "Bosilegrad", 
+            "Brus", "Bujanovac", "Čajetina", "Čoka", "Ćićevac", "Ćuprija", "Despotovac", 
+            "Dimitrovgrad", "Doljevac", "Gadžin Han", "Golubac", "Gornji Milanovac", "Ivanjica", 
+            "Irig", "Kanjiža", "Kladovo", "Knjaževac", "Knić", "Koceljeva", "Kosjerić", "Kovin", 
+            "Krupanj", "Kučevo", "Kuršumlija", "Lajkovac", "Lapovo", "Lebane", "Ljig", "Ljubovija", 
+            "Lučani", "Majdanpek", "Malo Crniće", "Medveđa", "Merošina", "Mionica", "Negotin", 
+            "Nova Crnja", "Nova Varoš", "Novi Bečej", "Novi Kneževac", "Odžaci", "Opovo", 
+            "Osečina", "Paraćin", "Pećinci", "Petrovac na Mlavi", "Plandište", "Požega", 
+            "Preševo", "Priboj", "Prijepolje", "Rača", "Raška", "Ražanj", "Rekovac", "Ruma", 
+            "Sečanj", "Senta", "Šid", "Sjenica", "Sokobanja", "Srbobran", "Sremski Karlovci", 
+            "Stara Pazova", "Surdulica", "Svilajnac", "Temerin", "Titel", "Topola", "Trstenik", 
+            "Tutin", "Ub", "Varvarin", "Velika Plana", "Vladičin Han", "Vladimirci", "Vlasotince", 
+            "Vojnik", "Vrbas", "Vrnjačka Banja", "Žabalj", "Žabari", "Žagubica", "Žitište", "Žitorađa",
+            
+            // Бачки Петровац
+            "Bački Petrovac", "Kulpin", "Maglić", "Gložan",
+            
+            // Ада
+            "Ada", "Mol", "Obornjača",
+            
+            // Алибунар
+            "Alibunar", "Banatski Karlovci", "Vladimirovac",
+            
+            // Апатин
+            "Apatin", "Prigrevica", "Kupusina",
+            
+            // Инђија
+            "Inđija", "Beška", "Ljukovo", "Maradik",
+            
+            // Мали Иђош
+            "Mali Iđoš", "Lovćenac", "Feketić"
+        ];
+
+        // Основные улицы (общий список для всех общин)
+        const commonStreets = [
+            "Главна", "Карађорђева", "Краља Петра", "Светог Саве", "Немањина", 
+            "Кнеза Милоша", "Железничка", "Партизанска", "Омладинска", "Школска",
+            "Трг ослобођења", "Bulevar oslobođenja", "Дунавска", "Моравска", 
+            "Првомајска", "Николе Пашића", "Светозара Марковића", "Димитрија Туцовића",
+            "Јована Јовановића Змаја", "Вука Караџића", "Доситејева", "Браће Југовића",
+            "Кнез Михаилова", "Теразије", "Студентски трг", "Скадарска", "Душанова",
+            "Масарикова", "Милетићева", "Фрушкогорска", "Банатска", "Војвођанска",
+            "Сремска", "Бачка", "Златиборска", "Копаоничка", "Рудничка", "Шумадијска",
+            "Poštanska", "Maksima Gorkog", "Majke Jevrosime", "Kneza Višeslava",
+            "Bulevar kralja Aleksandra", "Bulevar Nemanjića", "Bulevar despota Stefana"
+        ];
+
+        // Полный список городов и общин Сербии
+        const addressData = {
+            cities: {
+                // ГРАДОВИ (28 + Београд)
+                "Beograd": {
+                    municipalities: ["Barajevo", "Voždovac", "Vračar", "Grocka", "Zvezdara", "Zemun", "Lazarevac", "Mladenovac", "Novi Beograd", "Obrenovac", "Palilula", "Rakovica", "Savski venac", "Sopot", "Stari grad", "Surčin", "Čukarica"],
+                    streets: {
+                        "Stari grad": ["Studentski trg", "Knez Mihailova", "Terazije", "Kralja Petra", "Vasa Čarapića", "Makedonska", "Zeleni venac", "Dušanova", "Skadarska", "Kosančićev venac", "Cara Dušana", "Kralja Milana", "Nemanjina", "Resavska", "Balkanska", "Vasina", "Francuska", "Užička", "Pop Lukina", "Dobračina", "Jevremova", "Gospodar Jevremova", "Admirala Geprata", "Gavrila Principa", "Pariska", "Strahinjića Bana", "Rajićeva", "Tadeuša Košćuška", "Čika Ljubina", "Bulevar despota Stefana", "Hilandarska", "Simina", "Braće Jugovića", "Svetogorska", "Dzordza Vašingtona", "Višegradska", "Prizrenska", "Cara Nikolaja II", "Zmaj Jovina", "Braće Baruh", "Kolarčeva", "Venizelosova", "Majke Jevrosime", "Čumićeva", "Dimitrija Tucovića", "Dunavska", "Obilicev venac", "Strahinića Bana"],
+                        "Novi Beograd": ["Bulevar Zorana Đinđića", "Bulevar Mihajla Pupina", "Jurija Gagarina", "Gandijeva", "Milentija Popovića", "Antifašističke borbe", "Bulevar Arsenija Čarnojevića", "Dr Ivana Ribara", "Omladinskih brigada", "Narodnih heroja", "Tošin bunar", "Bulevar Nikole Tesle", "Vladimira Popovića", "Đorđa Stanojevića", "Nehruova", "Save Kovačevića", "Kornelija Stankovića", "Partizanske avijacije"],
+                        "Voždovac": ["Bulevar oslobođenja", "Ustanička", "Veljka Dugoševića", "Autoput za Niš", "Kumodraška", "Crnotravska", "Trešnjinog cveta", "Patrijarha Dimitrija", "Južni bulevar", "Medakovićeva", "Braće Jerković", "Vojvode Stepe", "Humska", "Banjička"],
+                        "Vračar": ["Bulevar kralja Aleksandra", "Krunska", "Kneginje Zorke", "Svetosavska", "Njegoševa", "Čarlija Čaplina", "Maksima Gorkog", "Karađorđeva", "Beogradska", "Neimarska", "Despota Stefana", "Katanićeva", "Kralja Milana", "Dečanska"],
+                        "Zvezdara": ["Bulevar kralja Aleksandra", "Dimitrija Tucovića", "Milana Rakića", "Cvijićeva", "Veljka Vlahovića", "Dragoslava Srejovića", "Alekse Nenadovića", "Ruzveltova", "Učiteljska", "Bulevar Mihajla Pupina", "Djure Jakšića"],
+                        "Zemun": ["Glavna", "Cara Dušana", "Zemunski kej", "Magistratski trg", "Karamatina", "Dubrovačka", "Gorkoga", "Tošin bunar", "Batajnički drum", "Ugrinovačka", "Bečkerečka", "Prvomajska"],
+                        "Čukarica": ["Požeška", "Patrijarha Dimitrija", "Kneza Višeslava", "Ibarska magistrala", "Radnička", "Banovo brdo", "Čukarička", "Banjica", "Sremčica", "Železnička"],
+                        "Palilula": ["Dunavska", "Francuska", "Visokog Stevana", "Učiteljska", "Dalmatinska", "Cara Nikolaja II", "Bulevar despota Stefana", "Ruzveltova", "Višnjićeva", "Tadeuša Košćuška"],
+                        "Savski venac": ["Nemanjina", "Karađorđeva", "Bulevar vojvode Mišića", "Kneza Miloša", "Sarajevska", "Hajduk Veljkova", "Gavrila Principa", "Resavska", "Prizrenska", "Svetog Save"],
+                        "Rakovica": ["Borska", "Patrijarha Dimitrija", "Rakovička", "Ibarska magistrala", "Kneza Višeslava", "Trgovačka", "Miloša Obrenović", "Crnotravska"],
+                        "Grocka": ["Smederevski put", "Boljevačka", "Grocka", "Pukovnika Milenka Pavlovića", "Vinička", "Boleč", "Begaljica"],
+                        "Lazarevac": ["Kralja Petra", "Svetog Save", "Trg oslobođenja", "Nemanjina", "Bulevar oslobođenja", "Ibarska magistrala", "Stevan Mokranjac"],
+                        "Mladenovac": ["Kralja Aleksandra", "Svetog Save", "Nemanjina", "Trg oslobođenja", "Karađorđeva", "Kosmajska", "Jagodinska"],
+                        "Obrenovac": ["Kralja Petra", "Miloša Obrenovića", "Vuka Karadžića", "Cara Lazara", "Trg oslobođenja", "Obilićeva", "Zmaj Jovina"],
+                        "Sopot": ["Sopot", "Kosmajska", "Nemenikuće", "Dučina", "Parcani", "Rogača"],
+                        "Surčin": ["Surčin", "Bečkerečka", "Dobanovci", "Petrovčić", "Boljevci", "Jakovo"],
+                        "Barajevo": ["Barajevo", "Arnajevo", "Boždarevac", "Guncati", "Manić", "Šiljakovac"]
+                    }
+                },
+                "Novi Sad": {
+                    municipalities: ["Novi Sad"],
+                    streets: {
+                        "Novi Sad": ["Bulevar oslobođenja", "Zmaj Jovina", "Dunavska", "Kralja Aleksandra", "Miletićeva", "Futoška", "Bulevar cara Lazara", "Narodnog fronta", "Straže Novosadske", "Jevrejska", "Katolička porta", "Grčka", "Masarikova", "Jovana Đorđevića", "Modene", "Ilije Ognjanovića", "Svetozara Miletića", "Vladimira Nazora", "Kisačka", "Bulevar Evrope"]
+                    }
+                },
+                "Niš": {
+                    municipalities: ["Medijana", "Palilula", "Pantelej", "Crveni Krst", "Niška Banja"],
+                    streets: {
+                        "Medijana": ["Bulevar Nemanjića", "Obrenovićeva", "Vozda Karađorđa", "Dr Zoran Đinđić", "Bulevar 12. februar", "Dušanova", "Kneginje Ljubice"],
+                        "Palilula": ["Cara Dušana", "Bulevar Evrope", "Jaše Prodanovića", "Stevana Mokranjca", "Vojvode Tankosića", "Hadži Milentijeva"],
+                        "Pantelej": ["Bulevar Nemanjića", "Partizanska", "Ćirila i Metodija", "Stevana Sremca", "Kneginje Milice"],
+                        "Crveni Krst": ["Bulevar Evrope", "Partizanska", "Vojvode Tankosića", "Stevana Mokranjca"],
+                        "Niška Banja": ["Sinđelićeva", "Dr Milutina Ivkovića", "Železnička", "Knjeginje Milice"]
+                    }
+                },
+                "Kragujevac": {
+                    municipalities: ["Kragujevac"],
+                    streets: {
+                        "Kragujevac": ["Kralja Aleksandra", "Svetozara Markovića", "Dositejeva", "Bulevar kraljice Marije", "Jovana Cvijića", "Kneza Mihaila", "Nikole Pašića", "Cara Lazara", "Đure Đakovića", "Kralja Petra"]
+                    }
+                },
+                "Subotica": {
+                    municipalities: ["Subotica"],
+                    streets: {
+                        "Subotica": ["Trg slobode", "Korzo", "Matice srpske", "Segedinski put", "Cara Lazara", "Maksima Gorkog", "Đure Đakovića", "Raše Končara", "Somborska", "Banatska"]
+                    }
+                },
+                "Pančevo": {
+                    municipalities: ["Pančevo"],
+                    streets: {
+                        "Pančevo": ["Trg kralja Petra", "Železnička", "Svetog Save", "Cara Lazara", "Dimitrija Tucovića", "Vojvodine", "Miloša Trebinjca", "Braće Jovanović", "Đure Đakovića"]
+                    }
+                },
+                "Čačak": {
+                    municipalities: ["Čačak"],
+                    streets: {
+                        "Čačak": ["Bulevar oslobodilaca", "Kneza Mihaila", "Žička", "Cara Dušana", "Svetog Save", "Nikole Pašića", "Prvomajska", "Dimitrija Tucovića"]
+                    }
+                },
+                "Novi Pazar": {
+                    municipalities: ["Novi Pazar"],
+                    streets: {
+                        "Novi Pazar": ["28. novembar", "Stevana Nemanje", "Rifata Burdžovića", "Alije Izetbegovića", "Generala Živkovića", "Vuka Karadžića", "Sutjeska"]
+                    }
+                },
+                "Zrenjanin": {
+                    municipalities: ["Zrenjanin"],
+                    streets: {
+                        "Zrenjanin": ["Trg slobode", "Kralja Aleksandra", "Đure Đakovića", "Bulevar Đorđa Vajferta", "Sečanj", "Dimitrija Tucovića", "Maksima Gorkog"]
+                    }
+                },
+                "Leskovac": {
+                    municipalities: ["Leskovac"],
+                    streets: {
+                        "Leskovac": ["Bulevar oslobođenja", "Stevana Mokranjca", "Cara Dušana", "Nikole Pašića", "Bulevar heroes", "Žitni trg", "Svetozara Markovića"]
+                    }
+                },
+                "Bor": {
+                    municipalities: ["Bor"],
+                    streets: {
+                        "Bor": ["Moše Pijade", "7. jula", "Đorđa Vajferta", "Trg oslobođenja", "Kralja Petra"]
+                    }
+                },
+                "Valjevo": {
+                    municipalities: ["Valjevo"],
+                    streets: {
+                        "Valjevo": ["Karađorđeva", "Vladike Nikolaja", "Birčaninova", "Vojvode Mišića", "Kneza Miloša"]
+                    }
+                },
+                "Vranje": {
+                    municipalities: ["Vranje grad", "Vranje selo"],
+                    streets: {
+                        "Vranje grad": ["Kralja Stefana Prvovenčanog", "Svetozara Markovića", "Prvomajska", "Kralja Aleksandra", "Titova"],
+                        "Vranje selo": ["Seoska ulica", "Glavna", "Centralna"]
+                    }
+                },
+                "Vršac": {
+                    municipalities: ["Vršac"],
+                    streets: {
+                        "Vršac": ["Svetosavska", "Trg pobede", "Heroja Pinkija", "Abrahama Linkolna", "Vojvođanska"]
+                    }
+                },
+                "Zaječar": {
+                    municipalities: ["Zaječar"],
+                    streets: {
+                        "Zaječar": ["Kralja Aleksandra", "Svetozara Markovića", "Hajduk Veljkova", "Nikole Pašića", "Kneginje Ljubice"]
+                    }
+                },
+                "Jagodina": {
+                    municipalities: ["Jagodina"],
+                    streets: {
+                        "Jagodina": ["Kneginje Milice", "Svetozara Markovića", "Karadjordjeva", "Kralja Petra", "Nikole Pašića"]
+                    }
+                },
+                "Kikinda": {
+                    municipalities: ["Kikinda"],
+                    streets: {
+                        "Kikinda": ["Trg srpskih dobrovoljaca", "Svetosavska", "Gospodara Vučića", "Sečeranska", "Žarka Zrenjanina"]
+                    }
+                },
+                "Kraljevo": {
+                    municipalities: ["Kraljevo"],
+                    streets: {
+                        "Kraljevo": ["Kraljice Marije", "Karađorđeva", "Omladinska", "Trg srpskih ratnika", "Nemanjina"]
+                    }
+                },
+                "Kruševac": {
+                    municipalities: ["Kruševac"],
+                    streets: {
+                        "Kruševac": ["Kneza Miloša", "Gazimestanska", "Vidovdanska", "Ćele kule", "Majke Jugovića"]
+                    }
+                },
+                "Loznica": {
+                    municipalities: ["Loznica"],
+                    streets: {
+                        "Loznica": ["Kneza Miloša", "Karađorđeva", "Vuka Karadžića", "Pasićeva", "Jovan Cvijić"]
+                    }
+                },
+                "Pirot": {
+                    municipalities: ["Pirot"],
+                    streets: {
+                        "Pirot": ["Srpskih vladara", "Kralja Petra", "Nikole Pašića", "Trg pobede", "Beogradska"]
+                    }
+                },
+                "Požarevac": {
+                    municipalities: ["Požarevac grad", "Kostolac"],
+                    streets: {
+                        "Požarevac grad": ["Dunavska", "Karađorđeva", "Svetozara Markovića", "Kneza Miloša", "Drinčićeva"],
+                        "Kostolac": ["Glavna", "Termoelektrane", "Rudarska", "Drinčićeva"]
+                    }
+                },
+                "Priština": {
+                    municipalities: ["Priština"],
+                    streets: {
+                        "Priština": ["Kralja Petra", "Lole Ribara", "Omladinska", "Dečanska", "Vidovdanska"]
+                    }
+                },
+                "Prokuplje": {
+                    municipalities: ["Prokuplje"],
+                    streets: {
+                        "Prokuplje": ["Topličina", "Karađorđeva", "Vojvode Stepe", "Svetog Save", "Nikole Pašića"]
+                    }
+                },
+                "Smederevo": {
+                    municipalities: ["Smederevo"],
+                    streets: {
+                        "Smederevo": ["Kralja Petra", "Dunavska", "Omladinska", "Đuriška", "Svetog Đorđa"]
+                    }
+                },
+                "Sombor": {
+                    municipalities: ["Sombor"],
+                    streets: {
+                        "Sombor": ["Trg cara Uroša", "Апатински пут", "Венац војводе Степе", "Војводе Путника", "Кнеза Михаила"]
+                    }
+                },
+                "Sremska Mitrovica": {
+                    municipalities: ["Sremska Mitrovica"],
+                    streets: {
+                        "Sremska Mitrovica": ["Светог Димитрија", "Краља Петра", "Железничка", "Фрушкогорска", "Војвођанска"]
+                    }
+                },
+                "Užice": {
+                    municipalities: ["Užice grad", "Sevojno"],
+                    streets: {
+                        "Užice grad": ["Партизанска", "Димитрија Туцовића", "Милоша Обилића", "Трг партизана", "Немањина"],
+                        "Sevojno": ["Златиборска", "Милана Ракића", "Светог Саве", "Железничка"]
+                    }
+                },
+                "Šabac": {
+                    municipalities: ["Šabac"],
+                    streets: {
+                        "Šabac": ["Карађорђева", "Масарикова", "Хајдук Вељкова", "Трг ослобођења", "Војводе Мишића"]
+                    }
+                },
+                // ВЕЋИ ОПШТИНСКИ ЦЕНТРИ
+                "Aleksandrovac": {
+                    municipalities: ["Aleksandrovac"],
+                    streets: {
+                        "Aleksandrovac": ["Карађорђева", "Главна", "Жупска", "Немањина", "Топличка"]
+                    }
+                },
+                "Aleksinac": {
+                    municipalities: ["Aleksinac"],
+                    streets: {
+                        "Aleksinac": ["Карађорђева", "Моравска", "Краљевска", "Немањина", "Светог Саве"]
+                    }
+                },
+                "Aranđelovac": {
+                    municipalities: ["Aranđelovac"],
+                    streets: {
+                        "Aranđelovac": ["Карађорђева", "Краља Петра", "Бањска", "Кнеза Милоша", "Омладинска"]
+                    }
+                }
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadInitialData();
+            setCurrentDate();
+            generateDocumentNumbers();
+            initializeStatistics();
+            updateSelectOptions();
+            initializeAddressSearch();
+            
+            // Инициализация чекбокса адреса доставки
+            document.getElementById('differentDeliveryAddress').addEventListener('change', function() {
+                const section = document.getElementById('deliveryAddressSection');
+                if (this.checked) {
+                    section.style.display = 'block';
+                    initializeDeliveryAddressSearch();
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+            
+            // Инициализация чекбокса ручного ввода адреса
+            document.getElementById('manualAddressInput').addEventListener('change', function() {
+                const automaticSection = document.getElementById('automaticAddressSection');
+                const manualSection = document.getElementById('manualAddressSection');
+                
+                if (this.checked) {
+                    // Переключаемся на ручной ввод
+                    automaticSection.style.display = 'none';
+                    manualSection.style.display = 'block';
+                    
+                    // Очищаем поля автоматического ввода
+                    document.getElementById('clientCity').value = '';
+                    document.getElementById('clientMunicipality').value = '';
+                    document.getElementById('clientStreet').value = '';
+                    document.getElementById('clientHouseNumber').value = '';
+                } else {
+                    // Переключаемся на автоматический ввод
+                    automaticSection.style.display = 'block';
+                    manualSection.style.display = 'none';
+                    
+                    // Очищаем поле ручного ввода
+                    document.getElementById('clientManualAddress').value = '';
+                    
+                    // Сбрасываем состояние автоматических полей
+                    const municipalityInput = document.getElementById('clientMunicipality');
+                    const streetInput = document.getElementById('clientStreet');
+                    if (municipalityInput) {
+                        municipalityInput.disabled = true;
+                        municipalityInput.placeholder = 'Выберите сначала город...';
+                    }
+                    if (streetInput) {
+                        streetInput.disabled = true;
+                        streetInput.placeholder = 'Выберите сначала общину...';
+                    }
+                }
+            });
+
+            // Закрыть модальное окно при клике вне его
+            document.addEventListener('click', function(e) {
+                const modal = document.getElementById('invoiceViewModal');
+                if (modal && e.target === modal) {
+                    closeInvoiceViewModal();
+                }
+            });
+
+            // Закрыть модальное окно при нажатии Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    const modal = document.getElementById('invoiceViewModal');
+                    if (modal) {
+                        closeInvoiceViewModal();
+                    }
+                }
+            });
+        });
+
+        function initializeAddressSearch() {
+            setupCitySearch('clientCity', 'clientCityDropdown', 'clientMunicipality', 'clientMunicipalityDropdown', 'clientStreet', 'clientStreetDropdown');
+        }
+
+        function initializeDeliveryAddressSearch() {
+            setupCitySearch('deliveryCity', 'deliveryCityDropdown', 'deliveryMunicipality', 'deliveryMunicipalityDropdown', 'deliveryStreet', 'deliveryStreetDropdown');
+        }
+
+        function setupCitySearch(cityInputId, cityDropdownId, municipalityInputId, municipalityDropdownId, streetInputId, streetDropdownId) {
+            const cityInput = document.getElementById(cityInputId);
+            const cityDropdown = document.getElementById(cityDropdownId);
+            const municipalityInput = document.getElementById(municipalityInputId);
+            const municipalityDropdown = document.getElementById(municipalityDropdownId);
+            const streetInput = document.getElementById(streetInputId);
+            const streetDropdown = document.getElementById(streetDropdownId);
+
+            if (!cityInput || !cityDropdown) return;
+
+            // Поиск городов
+            cityInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                
+                if (query.length === 0) {
+                    cityDropdown.style.display = 'none';
+                    enableMunicipalityInput();
+                    return;
+                }
+
+                const filteredCities = Object.keys(addressData.cities).filter(city => 
+                    city.toLowerCase().includes(query)
+                );
+
+                if (filteredCities.length === 0) {
+                    cityDropdown.style.display = 'none';
+                    return;
+                }
+
+                cityDropdown.innerHTML = '';
+                filteredCities.forEach(city => {
+                    const item = document.createElement('div');
+                    item.className = 'dropdown-item';
+                    item.textContent = city;
+                    item.addEventListener('click', function() {
+                        cityInput.value = city;
+                        cityDropdown.style.display = 'none';
+                        enableMunicipalityInput();
+                    });
+                    cityDropdown.appendChild(item);
+                });
+
+                cityDropdown.style.display = 'block';
+            });
+
+            cityInput.addEventListener('blur', function() {
+                setTimeout(() => {
+                    cityDropdown.style.display = 'none';
+                }, 200);
+            });
+
+            // Активируем поле общин после выбора города
+            function enableMunicipalityInput() {
+                if (!municipalityInput || !municipalityDropdown) return;
+                
+                municipalityInput.disabled = false;
+                municipalityInput.placeholder = 'Введите название общины...';
+                municipalityInput.value = '';
+                
+                setupMunicipalitySearch();
+            }
+
+            function setupMunicipalitySearch() {
+                if (!municipalityInput || !municipalityDropdown) return;
+
+                // Удаляем старые обработчики
+                const newMunicipalityInput = municipalityInput.cloneNode(true);
+                municipalityInput.parentNode.replaceChild(newMunicipalityInput, municipalityInput);
+                const updatedMunicipalityInput = document.getElementById(municipalityInputId);
+                const updatedMunicipalityDropdown = document.getElementById(municipalityDropdownId);
+
+                updatedMunicipalityInput.addEventListener('input', function() {
+                    const query = this.value.toLowerCase();
+                    
+                    if (query.length === 0) {
+                        updatedMunicipalityDropdown.style.display = 'none';
+                        resetStreet();
+                        return;
+                    }
+
+                    const filteredMunicipalities = allMunicipalities.filter(municipality => 
+                        municipality.toLowerCase().includes(query)
+                    );
+
+                    if (filteredMunicipalities.length === 0) {
+                        updatedMunicipalityDropdown.style.display = 'none';
+                        return;
+                    }
+
+                    updatedMunicipalityDropdown.innerHTML = '';
+                    filteredMunicipalities.forEach(municipality => {
+                        const item = document.createElement('div');
+                        item.className = 'dropdown-item';
+                        item.textContent = municipality;
+                        item.addEventListener('click', function() {
+                            updatedMunicipalityInput.value = municipality;
+                            updatedMunicipalityDropdown.style.display = 'none';
+                            enableStreetInput();
+                        });
+                        updatedMunicipalityDropdown.appendChild(item);
+                    });
+
+                    updatedMunicipalityDropdown.style.display = 'block';
+                });
+
+                updatedMunicipalityInput.addEventListener('focus', function() {
+                    // Показываем все общины при фокусе
+                    updatedMunicipalityDropdown.innerHTML = '';
+                    allMunicipalities.forEach(municipality => {
+                        const item = document.createElement('div');
+                        item.className = 'dropdown-item';
+                        item.textContent = municipality;
+                        item.addEventListener('click', function() {
+                            updatedMunicipalityInput.value = municipality;
+                            updatedMunicipalityDropdown.style.display = 'none';
+                            enableStreetInput();
+                        });
+                        updatedMunicipalityDropdown.appendChild(item);
+                    });
+                    updatedMunicipalityDropdown.style.display = 'block';
+                });
+
+                updatedMunicipalityInput.addEventListener('blur', function() {
+                    setTimeout(() => {
+                        updatedMunicipalityDropdown.style.display = 'none';
+                    }, 200);
+                });
+            }
+
+            function enableStreetInput() {
+                if (!streetInput || !streetDropdown) return;
+                
+                streetInput.disabled = false;
+                streetInput.placeholder = 'Введите название улицы...';
+                streetInput.value = '';
+                
+                setupStreetSearch();
+            }
+
+            function setupStreetSearch() {
+                if (!streetInput || !streetDropdown) return;
+
+                // Удаляем старые обработчики
+                const newStreetInput = streetInput.cloneNode(true);
+                streetInput.parentNode.replaceChild(newStreetInput, streetInput);
+                const updatedStreetInput = document.getElementById(streetInputId);
+                const updatedStreetDropdown = document.getElementById(streetDropdownId);
+
+                updatedStreetInput.addEventListener('input', function() {
+                    const query = this.value.toLowerCase();
+                    
+                    if (query.length === 0) {
+                        updatedStreetDropdown.style.display = 'none';
+                        return;
+                    }
+
+                    const filteredStreets = commonStreets.filter(street => 
+                        street.toLowerCase().includes(query)
+                    );
+
+                    if (filteredStreets.length === 0) {
+                        updatedStreetDropdown.style.display = 'none';
+                        return;
+                    }
+
+                    updatedStreetDropdown.innerHTML = '';
+                    filteredStreets.forEach(street => {
+                        const item = document.createElement('div');
+                        item.className = 'dropdown-item';
+                        item.textContent = street;
+                        item.addEventListener('click', function() {
+                            updatedStreetInput.value = street;
+                            updatedStreetDropdown.style.display = 'none';
+                        });
+                        updatedStreetDropdown.appendChild(item);
+                    });
+
+                    updatedStreetDropdown.style.display = 'block';
+                });
+
+                updatedStreetInput.addEventListener('focus', function() {
+                    // Показываем все улицы при фокусе
+                    updatedStreetDropdown.innerHTML = '';
+                    commonStreets.forEach(street => {
+                        const item = document.createElement('div');
+                        item.className = 'dropdown-item';
+                        item.textContent = street;
+                        item.addEventListener('click', function() {
+                            updatedStreetInput.value = street;
+                            updatedStreetDropdown.style.display = 'none';
+                        });
+                        updatedStreetDropdown.appendChild(item);
+                    });
+                    updatedStreetDropdown.style.display = 'block';
+                });
+
+                updatedStreetInput.addEventListener('blur', function() {
+                    setTimeout(() => {
+                        updatedStreetDropdown.style.display = 'none';
+                    }, 200);
+                });
+            }
+
+            function resetStreet() {
+                if (streetInput) {
+                    streetInput.value = '';
+                    streetInput.disabled = true;
+                    streetInput.placeholder = 'Выберите сначала общину...';
+                }
+            }
+        }
+
+        function loadInitialData() {
+            clients = [
+                { name: "SVDA DOO", mb: "22058282", pib: "114703885", address: "Beograd, Stari grad, Majke Jevrosime 19", contact: "", bank: "", city: "Beograd", municipality: "Stari grad", street: "Majke Jevrosime", houseNumber: "19" },
+                { name: "AUDITORIA DOO BEOGRAD", mb: "22043277", pib: "114586673", address: "Beograd, Voždovac, Vojvode Dobrnca 48", contact: "", bank: "190-0000000097100 (Алта банка А.Д.)", city: "Beograd", municipality: "Voždovac", street: "Vojvode Dobrnca", houseNumber: "48" },
+                { name: "Aleksandra Tarasenko PR", mb: "67249208", pib: "114000935", address: "Novi Sad, Novi Sad, Masarikova 18", contact: "Ugostiteljska radnja Seal & Tea", bank: "", city: "Novi Sad", municipality: "Novi Sad", street: "Masarikova", houseNumber: "18" },
+                { name: "Vera Organic Coffee and Tea doo", mb: "21886866", pib: "113543561", address: "Beograd, Stari grad, Nikole Spasića 4", contact: "avmofficebg@gmail.com, 063/773-6698", bank: "", city: "Beograd", municipality: "Stari grad", street: "Nikole Spasića", houseNumber: "4" },
+                { name: "ČETIRI COFFEE DOO", mb: "22057146", pib: "114695557", address: "Beograd, Stari grad, Terazije 36", contact: "", bank: "", city: "Beograd", municipality: "Stari grad", street: "Terazije", houseNumber: "36" }
+            ];
+
+            products = [
+                { code: "GF-B-TG210", name: "Tieguanyin/Zeleni Čaj 210g", price: 2297, category: "Zeleni Čaj" },
+                { code: "GF-B-EG210", name: "Earl Grey/Crni Čaj 210g", price: 1850, category: "Crni Čaj" },
+                { code: "GF-G-JG210", name: "Jasmine Green Beverage/Zeleni Čaj 210g", price: 1837, category: "Zeleni Čaj" },
+                { code: "GF-G-SN210", name: "Sencha/Zeleni Čaj 210g", price: 1575, category: "Zeleni Čaj" },
+                { code: "GF-B-MO210", name: "Milky Oolong/Zeleni Čaj 210g", price: 2167, category: "Zeleni Čaj" },
+                { code: "FJN-B-DHP210", name: "Da Hong Pao/Crni Čaj 210g", price: 2691, category: "Crni Čaj" },
+                { code: "FJN-B-GAB210", name: "Gaba Oolong АА/Crni Čaj 210g", price: 4854, category: "Crni Čaj" },
+                { code: "FJN-B-DHP28", name: "Da Hong Pao/Crni Čaj 28g", price: 359, category: "Crni Čaj" },
+                { code: "GF-W-BMD28", name: "Bai mu dan/Zeleni Čaj 28g", price: 332, category: "Zeleni Čaj" },
+                { code: "FJN-B-TG28", name: "Tieguanyin/Zeleni Čaj 28g", price: 307, category: "Zeleni Čaj" },
+                { code: "CHC-B-LS28", name: "Lapsang Souchong Black Tea/Crni Čaj 28g", price: 315, category: "Crni Čaj" },
+                { code: "CHC-G-MPC25-5", name: "Golden tocha round Pu Erh/Crni Čaj 5g", price: 62, category: "Crni Čaj" },
+                { code: "CHC-PU-RS10", name: "Puer Chagao Resin Round/Crni Čaj 1g", price: 32, category: "Crni Čaj" },
+                { code: "FJN-B-GAB28", name: "Gaba Oolong АА/Crni Čaj 28g", price: 648, category: "Crni Čaj" },
+                { code: "FJN-B-MO28", name: "Milky Oolong/Zeleni Čaj 28g", price: 289, category: "Zeleni Čaj" },
+                { code: "GF-B-EG28", name: "Earl Grey/Crni Čaj 28g", price: 307, category: "Crni Čaj" },
+                { code: "GF-G-SN28", name: "Sencha/Zeleni Čaj 28g", price: 210, category: "Zeleni Čaj" },
+                { code: "GF-G-JG28", name: "Jasmine Green Beverage/Zeleni Čaj 28g", price: 245, category: "Zeleni Čaj" },
+                { code: "CHC-B-LS210", name: "Lapsang Souchong Black Tea/Crni Čaj 210g", price: 2100, category: "Crni Čaj" },
+                { code: "GF-B-KM210", name: "Keemum/Crni Čaj 210g", price: 1950, category: "Crni Čaj" }
+            ];
+            renderClientsTable();
+            renderProductsTable();
+        }
+
+        function setCurrentDate() {
+            const today = new Date().toISOString().split('T')[0];
+            const nextWeek = new Date();
+            nextWeek.setDate(nextWeek.getDate() + 7);
+            const nextWeekStr = nextWeek.toISOString().split('T')[0];
+
+            document.getElementById('invoiceDate').value = today;
+            document.getElementById('invoiceDueDate').value = nextWeekStr;
+            document.getElementById('deliveryDate').value = today;
+            document.getElementById('deliveryDueDate').value = nextWeekStr;
+        }
+
+        function generateDocumentNumbers() {
+            const today = new Date();
+            const dateStr = `${String(today.getDate()).padStart(2, '0')}${String(today.getMonth() + 1).padStart(2, '0')}${today.getFullYear()}`;
+            document.getElementById('invoiceNumber').value = `1-${dateStr}`;
+            document.getElementById('deliveryNumber').value = `1-${dateStr}`;
+        }
+
+        function updateSelectOptions() {
+            // Инициализируем поисковые поля для клиентов
+            initializeClientSearch('invoiceClientSearch', 'invoiceClient', 'invoiceClientDropdown');
+            initializeClientSearch('deliveryClientSearch', 'deliveryClient', 'deliveryClientDropdown');
+            
+            // Инициализируем поисковые поля для товаров
+            initializeProductSearch();
+        }
+
+        function initializeClientSearch(inputId, hiddenId, dropdownId) {
+            const input = document.getElementById(inputId);
+            const hidden = document.getElementById(hiddenId);
+            const dropdown = document.getElementById(dropdownId);
+            
+            if (!input || !hidden || !dropdown) return;
+
+            input.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                hidden.value = '';
+                
+                if (query.length === 0) {
+                    dropdown.style.display = 'none';
+                    return;
+                }
+
+                const filteredClients = clients.filter(client => 
+                    client.name.toLowerCase().includes(query) ||
+                    client.mb.includes(query) ||
+                    client.pib.includes(query)
+                );
+
+                if (filteredClients.length === 0) {
+                    dropdown.style.display = 'none';
+                    return;
+                }
+
+                dropdown.innerHTML = '';
+                filteredClients.forEach((client, index) => {
+                    const originalIndex = clients.findIndex(c => c.name === client.name && c.mb === client.mb);
+                    const item = document.createElement('div');
+                    item.className = 'dropdown-item';
+                    item.innerHTML = `
+                        <div style="font-weight: bold;">${client.name}</div>
+                        <div style="font-size: 12px; color: #666;">МБ: ${client.mb} | ПИБ: ${client.pib}</div>
+                        <div style="font-size: 12px; color: #888;">${client.address}</div>
+                    `;
+                    item.addEventListener('click', function() {
+                        input.value = client.name;
+                        hidden.value = originalIndex;
+                        dropdown.style.display = 'none';
+                    });
+                    dropdown.appendChild(item);
+                });
+
+                dropdown.style.display = 'block';
+            });
+
+            input.addEventListener('focus', function() {
+                if (this.value && dropdown.children.length > 0) {
+                    dropdown.style.display = 'block';
+                }
+            });
+
+            input.addEventListener('blur', function() {
+                setTimeout(() => {
+                    dropdown.style.display = 'none';
+                }, 200);
+            });
+        }
+
+        function initializeProductSearch() {
+            // Инициализация для существующих полей товаров
+            document.querySelectorAll('.invoice-product-search').forEach(input => {
+                setupProductSearch(input);
+            });
+            
+            document.querySelectorAll('.delivery-product-search').forEach(input => {
+                setupProductSearch(input);
+            });
+        }
+
+        function setupProductSearch(input) {
+            const container = input.closest('.searchable-select');
+            const hidden = container.querySelector('.invoice-product, .delivery-product');
+            const dropdown = container.querySelector('.invoice-product-dropdown, .delivery-product-dropdown');
+            
+            if (!hidden || !dropdown) return;
+
+            input.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                hidden.value = '';
+                
+                if (query.length === 0) {
+                    dropdown.style.display = 'none';
+                    return;
+                }
+
+                const filteredProducts = products.filter(product => 
+                    product.code.toLowerCase().includes(query) ||
+                    product.name.toLowerCase().includes(query) ||
+                    product.category.toLowerCase().includes(query)
+                );
+
+                if (filteredProducts.length === 0) {
+                    dropdown.style.display = 'none';
+                    return;
+                }
+
+                dropdown.innerHTML = '';
+                filteredProducts.forEach(product => {
+                    const originalIndex = products.findIndex(p => p.code === product.code);
+                    const item = document.createElement('div');
+                    item.className = 'dropdown-item';
+                    item.innerHTML = `
+                        <div style="font-weight: bold;">${product.code} - ${product.name}</div>
+                        <div style="font-size: 12px; color: #666;">Цена: ${product.price.toFixed(2)} RSD | Категория: ${product.category}</div>
+                    `;
+                    item.addEventListener('click', function() {
+                        input.value = `${product.code} - ${product.name}`;
+                        hidden.value = originalIndex;
+                        dropdown.style.display = 'none';
+                        
+                        // Обновить цену для инвойсов
+                        if (hidden.classList.contains('invoice-product')) {
+                            updateInvoiceItemPriceFromSearch(hidden);
+                        }
+                    });
+                    dropdown.appendChild(item);
+                });
+
+                dropdown.style.display = 'block';
+            });
+
+            input.addEventListener('focus', function() {
+                if (this.value && dropdown.children.length > 0) {
+                    dropdown.style.display = 'block';
+                }
+            });
+
+            input.addEventListener('blur', function() {
+                setTimeout(() => {
+                    dropdown.style.display = 'none';
+                }, 200);
+            });
+        }
+
+        function updateInvoiceItemPriceFromSearch(hiddenInput) {
+            const row = hiddenInput.closest('.invoice-items');
+            if (!row) return;
+            
+            const productIndex = hiddenInput.value;
+            
+            if (productIndex !== '') {
+                const product = products[productIndex];
+                const priceInput = row.querySelector('.invoice-price');
+                const quantityInput = row.querySelector('.invoice-quantity');
+                const amountInput = row.querySelector('.invoice-amount');
+                
+                priceInput.value = product.price.toFixed(2);
+                const quantity = parseInt(quantityInput.value) || 1;
+                amountInput.value = (product.price * quantity).toFixed(2);
+                calculateInvoiceTotals();
+            }
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            document.body.appendChild(alertDiv);
+            setTimeout(() => document.body.removeChild(alertDiv), 3000);
+        }
+
+        // Клиенты
+        function addClient() {
+            const name = document.getElementById('clientName').value.trim();
+            const mb = document.getElementById('clientMB').value.trim();
+            const pib = document.getElementById('clientPIB').value.trim();
+            const contact = document.getElementById('clientContact').value.trim();
+            const bank = document.getElementById('clientBank').value.trim();
+            const isManualInput = document.getElementById('manualAddressInput').checked;
+            
+            let address, city, municipality, street, houseNumber;
+            
+            if (isManualInput) {
+                // Ручной ввод адреса
+                address = document.getElementById('clientManualAddress').value.trim();
+                
+                if (!name || !mb || !pib || !address) { 
+                    showAlert('Заполните обязательные поля!', 'danger'); 
+                    return; 
+                }
+                
+                // Парсим адрес для базовой структуры (опционально)
+                const addressParts = address.split(',').map(part => part.trim());
+                city = addressParts[0] || '';
+                municipality = addressParts[1] || '';
+                street = addressParts[2] || '';
+                houseNumber = addressParts[3] || '';
+                
+            } else {
+                // Автоматический ввод адреса
+                city = document.getElementById('clientCity').value.trim();
+                municipality = document.getElementById('clientMunicipality').value.trim();
+                street = document.getElementById('clientStreet').value.trim();
+                houseNumber = document.getElementById('clientHouseNumber').value.trim();
+                
+                if (!name || !mb || !pib || !city || !municipality || !street) { 
+                    showAlert('Заполните обязательные поля!', 'danger'); 
+                    return; 
+                }
+
+                // Формируем полный адрес
+                address = `${city}, ${municipality}, ${street}`;
+                if (houseNumber) {
+                    address += ` ${houseNumber}`;
+                }
+            }
+            
+            const newClient = { 
+                name, 
+                mb, 
+                pib, 
+                address, 
+                contact, 
+                bank, 
+                city, 
+                municipality, 
+                street, 
+                houseNumber,
+                isManualAddress: isManualInput
+            };
+            
+            clients.push(newClient);
+            clearClientForm(); 
+            renderClientsTable();
+            updateSelectOptions();
+            showAlert('Клиент добавлен!', 'success');
+        }
+
+        function clearClientForm() {
+            ['clientName', 'clientMB', 'clientPIB', 'clientCity', 'clientMunicipality', 'clientStreet', 'clientHouseNumber', 'clientContact', 'clientBank', 'clientManualAddress'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.value = '';
+            });
+            
+            // Сбрасываем чекбокс ручного ввода
+            const manualCheckbox = document.getElementById('manualAddressInput');
+            if (manualCheckbox) {
+                manualCheckbox.checked = false;
+                
+                // Показываем автоматический ввод, скрываем ручной
+                document.getElementById('automaticAddressSection').style.display = 'block';
+                document.getElementById('manualAddressSection').style.display = 'none';
+            }
+            
+            // Сбросить состояние полей адреса
+            const municipalityInput = document.getElementById('clientMunicipality');
+            const streetInput = document.getElementById('clientStreet');
+            if (municipalityInput) {
+                municipalityInput.disabled = true;
+                municipalityInput.placeholder = 'Выберите сначала город...';
+            }
+            if (streetInput) {
+                streetInput.disabled = true;
+                streetInput.placeholder = 'Выберите сначала общину...';
+            }
+        }
+
+        function deleteClient(index) {
+            if (confirm('Удалить клиента?')) {
+                clients.splice(index, 1); 
+                renderClientsTable();
+                updateSelectOptions();
+                showAlert('Клиент удален!', 'success');
+            }
+        }
+
+        function renderClientsTable() {
+            const tbody = document.getElementById('clientsTableBody');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            clients.forEach((client, index) => {
+                const row = tbody.insertRow();
+                const addressDisplay = client.isManualAddress ? 
+                    `<span style="color: #007bff;">📝</span> ${client.address}` : 
+                    client.address;
+                    
+                row.innerHTML = `
+                    <td><strong>${client.name}</strong></td>
+                    <td>${client.mb}</td>
+                    <td>${client.pib}</td>
+                    <td style="max-width: 200px; word-wrap: break-word;">${addressDisplay}</td>
+                    <td>${client.contact}</td>
+                    <td>${client.bank}</td>
+                    <td><button class="btn btn-danger" onclick="deleteClient(${index})">Удалить</button></td>
+                `;
+            });
+        }
+
+        // Товары
+        function addProduct() {
+            const code = document.getElementById('productCode').value.trim();
+            const name = document.getElementById('productName').value.trim();
+            const price = parseFloat(document.getElementById('productPrice').value);
+            const category = document.getElementById('productCategory').value;
+            
+            if (!code || !name || !price || price <= 0) { 
+                showAlert('Заполните поля корректно!', 'danger'); 
+                return; 
+            }
+            if (products.find(p => p.code === code)) { 
+                showAlert('Код уже существует!', 'danger'); 
+                return; 
+            }
+            
+            const newProduct = { code, name, price, category };
+            products.push(newProduct);
+            clearProductForm(); 
+            renderProductsTable();
+            updateSelectOptions();
+            showAlert('Товар добавлен!', 'success');
+        }
+
+        function clearProductForm() {
+            ['productCode', 'productName', 'productPrice', 'productCategory'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.value = '';
+            });
+        }
+
+        function deleteProduct(index) {
+            if (confirm('Удалить товар?')) {
+                products.splice(index, 1); 
+                renderProductsTable();
+                updateSelectOptions();
+                showAlert('Товар удален!', 'success');
+            }
+        }
+
+        function renderProductsTable() {
+            const tbody = document.getElementById('productsTableBody');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            products.forEach((product, index) => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td><strong>${product.code}</strong></td>
+                    <td>${product.name}</td>
+                    <td>${product.price.toFixed(2)} RSD</td>
+                    <td>${product.category}</td>
+                    <td><button class="btn btn-danger" onclick="deleteProduct(${index})">Удалить</button></td>
+                `;
+            });
+        }
+
+        // Инвойсы
+        function addInvoiceItem() {
+            const container = document.getElementById('invoiceItems');
+            if(!container) return;
+
+            const newItem = document.createElement('div');
+            newItem.className = 'invoice-items';
+            
+            newItem.innerHTML = `
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label>Товар *</label>
+                    <div class="searchable-select">
+                        <input type="text" class="searchable-input invoice-product-search" placeholder="Введите код или название товара..." autocomplete="off">
+                        <input type="hidden" class="invoice-product" value="">
+                        <div class="dropdown-menu invoice-product-dropdown"></div>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label>Количество</label>
+                    <input type="number" class="invoice-quantity" value="1" min="1">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label>Цена (RSD)</label>
+                    <input type="number" class="invoice-price" readonly style="background: #f8f9fa;">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label>Сумма (RSD)</label>
+                    <input type="number" class="invoice-amount" readonly style="background: #f8f9fa; font-weight: bold;">
+                </div>
+                <div style="padding-top: 25px;">
+                    <button class="btn btn-danger" onclick="removeInvoiceItem(this)">Удалить</button>
+                </div>
+            `;
+            
+            container.appendChild(newItem);
+            
+            // Инициализировать поиск для нового поля
+            const newSearch = newItem.querySelector('.invoice-product-search');
+            setupProductSearch(newSearch);
+        }
+
+        function removeInvoiceItem(button) {
+            const container = document.getElementById('invoiceItems');
+            if(!container) return;
+            
+            if (container.children.length > 1) {
+                button.closest('.invoice-items').remove();
+                calculateInvoiceTotals();
+            } else {
+                showAlert('Должен остаться хотя бы один товар!', 'danger');
+            }
+        }
+
+        function calculateInvoiceTotals() {
+            const amounts = document.querySelectorAll('.invoice-amount');
+            let subtotal = 0;
+            amounts.forEach(input => subtotal += parseFloat(input.value) || 0);
+            
+            const vatRate = parseFloat(document.getElementById('invoiceVAT').value) || 0;
+            const vatAmount = subtotal * (vatRate / 100);
+            const total = subtotal + vatAmount;
+
+            document.getElementById('invoiceSubtotal').textContent = subtotal.toFixed(2) + ' RSD';
+            document.getElementById('invoiceVATAmount').textContent = vatAmount.toFixed(2) + ' RSD';
+            document.getElementById('invoiceTotal').textContent = total.toFixed(2) + ' RSD';
+        }
+
+        function generateInvoice() {
+            const invoiceNumber = document.getElementById('invoiceNumber').value.trim();
+            const invoiceDate = document.getElementById('invoiceDate').value;
+            const invoiceDueDate = document.getElementById('invoiceDueDate').value;
+            const clientIndex = document.getElementById('invoiceClient').value;
+            const delivery = document.getElementById('invoiceDelivery').value;
+            const vatRate = document.getElementById('invoiceVAT').value;
+
+            if (!invoiceNumber || !invoiceDate || !invoiceDueDate || clientIndex === '') {
+                showAlert('Заполните все обязательные поля!', 'danger'); 
+                return;
+            }
+
+            const items = [];
+            const itemRows = document.querySelectorAll('.invoice-items');
+            
+            itemRows.forEach(row => {
+                const hiddenProduct = row.querySelector('.invoice-product');
+                const productIndex = hiddenProduct.value;
+                const quantity = parseInt(row.querySelector('.invoice-quantity').value);
+                const amount = parseFloat(row.querySelector('.invoice-amount').value) || 0;
+
+                if (productIndex !== '' && quantity > 0) {
+                    const product = products[productIndex];
+                    items.push({
+                        product: product,
+                        quantity: quantity,
+                        price: product.price,
+                        amount: amount
+                    });
+                }
+            });
+
+            if (items.length === 0) {
+                showAlert('Добавьте хотя бы один товар!', 'danger');
+                return;
+            }
+
+            const client = clients[clientIndex];
+            
+            // Проверяем адрес доставки
+            let deliveryAddress = client.address;
+            const isDifferentAddress = document.getElementById('differentDeliveryAddress').checked;
+            
+            if (isDifferentAddress) {
+                const deliveryCity = document.getElementById('deliveryCity').value.trim();
+                const deliveryMunicipality = document.getElementById('deliveryMunicipality').value.trim();
+                const deliveryStreet = document.getElementById('deliveryStreet').value.trim();
+                const deliveryHouseNumber = document.getElementById('deliveryHouseNumber').value.trim();
+                
+                if (!deliveryCity || !deliveryMunicipality || !deliveryStreet) {
+                    showAlert('Заполните все поля адреса доставки!', 'danger');
+                    return;
+                }
+                
+                deliveryAddress = `${deliveryCity}, ${deliveryMunicipality}, ${deliveryStreet}`;
+                if (deliveryHouseNumber) {
+                    deliveryAddress += ` ${deliveryHouseNumber}`;
+                }
+            }
+            
+            const subtotal = items.reduce((sum, item) => sum + item.amount, 0);
+            const vatAmount = subtotal * (parseFloat(vatRate) / 100);
+            const total = subtotal + vatAmount;
+
+            currentInvoiceData = {
+                number: invoiceNumber,
+                date: invoiceDate,
+                dueDate: invoiceDueDate,
+                client: client,
+                items: items,
+                delivery: delivery,
+                deliveryAddress: deliveryAddress,
+                isDifferentDeliveryAddress: isDifferentAddress,
+                vatRate: parseFloat(vatRate),
+                subtotal: subtotal,
+                vatAmount: vatAmount,
+                total: total
+            };
+
+            const invoiceHTML = generateInvoiceHTML(currentInvoiceData);
+            document.getElementById('invoiceContent').innerHTML = invoiceHTML;
+            document.getElementById('invoicePreview').style.display = 'block';
+            document.getElementById('invoicePreview').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('invoiceConfirmMessage').style.display = 'none';
+        }
+
+        function generateInvoiceHTML(invoice) {
+            let itemsHTML = '';
+            invoice.items.forEach(item => {
+                itemsHTML += `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 4px 6px; border-bottom: 1px solid #eee; font-size: 10px;">${item.product.code}/${item.product.name}</td>
+                        <td style="padding: 4px 6px; border-bottom: 1px solid #eee; text-align: center; font-size: 10px;">${item.quantity}</td>
+                        <td style="padding: 4px 6px; border-bottom: 1px solid #eee; text-align: right; font-size: 10px;">${item.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} RSD</td>
+                        <td style="padding: 4px 6px; border-bottom: 1px solid #eee; text-align: right; font-size: 10px; font-weight: bold;">${item.amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} RSD</td>
+                    </tr>
+                `;
+            });
+
+            return `
+                <div style="max-width: 210mm; margin: 0 auto; padding: 10mm; font-family: 'Segoe UI', Arial, sans-serif; background: white; line-height: 1.3; font-size: 12px;">
+                    <!-- Заголовок с логотипом -->
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <img src="https://i.ibb.co/tMCT4jb7/srb-white-verical.png" alt="srb-white-verical" border="0" style="width: 70px; height: auto; border-radius: 10px; background: #000; padding: 8px;">
+                            <div>
+                                <h2 style="margin: 0; font-size: 15px; color: #333; line-height: 1.2;">Среħа 2024 ДОО Београд (Стари Град)</h2>
+                                <p style="margin: 1px 0; color: #666; font-size: 10px;">Matični broj: 22019309</p>
+                                <p style="margin: 1px 0; color: #666; font-size: 10px;">PIB: 114407658</p>
+                                <p style="margin: 1px 0; color: #666; font-size: 10px;">Sedište: Beograd, Stari Grad, Studentski Trg 4</p>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <h1 style="margin: 0; font-size: 32px; color: #666; font-weight: 300;">Račun</h1>
+                            <p style="margin: 3px 0 0 0; font-size: 13px; color: #666;"># ${invoice.number}</p>
+                            <div style="margin-top: 12px;">
+                                <p style="margin: 2px 0; font-size: 11px;"><strong>Date:</strong> ${new Date(invoice.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                                <p style="margin: 2px 0; font-size: 11px;"><strong>Due Date:</strong> ${new Date(invoice.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                                <p style="margin: 6px 0 2px 0; font-size: 13px; font-weight: bold; color: #333;"><strong>Balance Due:</strong> ${invoice.total.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} RSD</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Информация о клиенте и доставке -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 15px;">
+                        <div>
+                            <h4 style="margin: 0 0 6px 0; color: #333; font-size: 11px;">Poručioc:</h4>
+                            <div style="font-size: 10px; line-height: 1.3;">
+                                <p style="margin: 0; font-weight: bold;">${invoice.client.name.split(' ')[0]}</p>
+                                <p style="margin: 0; font-weight: bold;">${invoice.client.name.split(' ').slice(1).join(' ')}</p>
+                                ${invoice.client.contact && invoice.client.contact.includes('Ugostiteljska') ? '<p style="margin: 0;">Ugostiteljska radnja</p>' : ''}
+                                ${invoice.client.contact && invoice.client.contact.includes('Seal') ? '<p style="margin: 0;">Seal</p>' : ''}
+                                ${invoice.client.contact && invoice.client.contact.includes('Tea') ? '<p style="margin: 0;">& Tea</p>' : ''}
+                                <p style="margin: 0;">${invoice.client.address.split(',')[1] ? invoice.client.address.split(',')[1].trim() : 'Novi Sad'}</p>
+                                <p style="margin: 0;">Matični broj: ${invoice.client.mb}</p>
+                                <p style="margin: 0;">PIB: ${invoice.client.pib}</p>
+                                <p style="margin: 0;">Sedište: ${invoice.client.address}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="margin: 0 0 6px 0; color: #333; font-size: 11px;">Isporuka na adresu::</h4>
+                            <p style="margin: 0; font-size: 10px;">${invoice.deliveryAddress || invoice.client.address}</p>
+                            <p style="margin: 6px 0 0 0; font-size: 10px;"><strong>Način:</strong> ${invoice.delivery}</p>
+                        </div>
+                    </div>
+
+                    <!-- Таблица товаров -->
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10px;">
+                        <thead>
+                            <tr style="background: #333; color: white;">
+                                <th style="padding: 6px; text-align: left; font-size: 10px; font-weight: normal;">Proizvod</th>
+                                <th style="padding: 6px; text-align: center; font-size: 10px; font-weight: normal;">količina</th>
+                                <th style="padding: 6px; text-align: center; font-size: 10px; font-weight: normal;">cena</th>
+                                <th style="padding: 6px; text-align: center; font-size: 10px; font-weight: normal;">iznos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsHTML}
+                        </tbody>
+                    </table>
+                    
+                    <!-- Итоги -->
+                    <div style="text-align: right; margin-bottom: 15px;">
+                        <div style="display: inline-block; text-align: right;">
+                            <p style="margin: 2px 0; font-size: 12px;"><strong>Subtotal:</strong> ${invoice.subtotal.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} RSD</p>
+                            <p style="margin: 2px 0; font-size: 12px;"><strong>PDV (${invoice.vatRate}%):</strong> ${invoice.vatAmount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} RSD</p>
+                            <p style="margin: 6px 0 2px 0; font-size: 14px; font-weight: bold; color: #333;"><strong>Total:</strong> ${invoice.total.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} RSD</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Банковские реквизиты -->
+                    <div style="margin-top: 15px;">
+                        <h4 style="margin: 0 0 4px 0; font-size: 10px;">Podaci o računima za prijem naknade :</h4>
+                        <p style="margin: 1px 0; font-size: 10px;">Broj računa: 190-0000000085540-29</p>
+                        <p style="margin: 1px 0; font-size: 10px;">Kod: Alta Banka ad Beograd</p>
+                        <p style="margin: 1px 0; font-size: 10px;">Adresa banke: Beograd, Novi Beograd, Bulevar Zorana Đinđića 121</p>
+                        <p style="margin: 8px 0 1px 0; font-size: 10px;">Plaćanje sa pozivom na broj: ATSNS${invoice.number.replace(/-/g, '')}</p>
+                    </div>
+                    
+                    <style>
+                        @media print {
+                            @page {
+                                size: A4;
+                                margin: 10mm;
+                            }
+                            body {
+                                margin: 0;
+                                padding: 0;
+                            }
+                        }
+                    </style>
+                </div>
+            `;
+        }
+
+        function confirmInvoice() {
+            if (!currentInvoiceData) { 
+                showAlert('Нет данных инвойса!', 'danger'); 
+                return; 
+            }
+            
+            if (confirmedInvoices.find(inv => inv.number === currentInvoiceData.number)) { 
+                showAlert('Инвойс уже утвержден!', 'danger'); 
+                return; 
+            }
+            
+            confirmedInvoices.push({ ...currentInvoiceData, confirmedDate: new Date().toISOString() });
+            updateStatistics();
+            document.getElementById('invoiceConfirmMessage').style.display = 'block';
+            showAlert('Инвойс утвержден!', 'success');
+        }
+
+        function exportInvoiceToPDF() {
+            const invoiceContent = document.getElementById('invoiceContent').innerHTML;
+            
+            const fullHTML = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Рачун ${currentInvoiceData.number}</title>
+                    <style>
+                        @page {
+                            size: A4;
+                            margin: 15mm;
+                        }
+                        body {
+                            margin: 0;
+                            padding: 0;
+                            font-family: 'Segoe UI', Arial, sans-serif;
+                        }
+                        @media print {
+                            body {
+                                -webkit-print-color-adjust: exact;
+                                print-color-adjust: exact;
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${invoiceContent}
+                </body>
+                </html>
+            `;
+            
+            // Создаем временное окно для печати
+            const printWindow = window.open('', '_blank');
+            if (printWindow) {
+                printWindow.document.write(fullHTML);
+                printWindow.document.close();
+                
+                // Ждем загрузки содержимого и запускаем печать
+                printWindow.onload = function() {
+                    setTimeout(() => {
+                        printWindow.print();
+                        // Автоматически закрываем окно после печати (если пользователь не отменил)
+                        setTimeout(() => {
+                            if (!printWindow.closed) {
+                                printWindow.close();
+                            }
+                        }, 1000);
+                    }, 500);
+                };
+            } else {
+                // Fallback для браузеров, блокирующих попапы
+                downloadInvoiceAsHTML();
+            }
+            
+            showAlert('Инвойс готов для экспорта!', 'success');
+        }
+
+        function downloadInvoiceAsHTML() {
+            const invoiceContent = document.getElementById('invoiceContent').innerHTML;
+            
+            const fullHTML = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Рачун ${currentInvoiceData.number}</title>
+                    <style>
+                        @page {
+                            size: A4;
+                            margin: 15mm;
+                        }
+                        body {
+                            margin: 0;
+                            padding: 0;
+                            font-family: 'Segoe UI', Arial, sans-serif;
+                        }
+                        @media print {
+                            body {
+                                -webkit-print-color-adjust: exact;
+                                print-color-adjust: exact;
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${invoiceContent}
+                </body>
+                </html>
+            `;
+            
+            // Создаем blob и скачиваем файл
+            const blob = new Blob([fullHTML], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `Racun_${currentInvoiceData.number.replace(/[^a-zA-Z0-9]/g, '_')}.html`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Освобождаем память
+            URL.revokeObjectURL(url);
+            showAlert('HTML файл инвойса скачан!', 'success');
+        }
+
+        function copyInvoiceToClipboard() {
+            const invoiceContent = document.getElementById('invoiceContent');
+            if (!invoiceContent) {
+                showAlert('Нет содержимого для копирования!', 'danger');
+                return;
+            }
+
+            // Создаем временный элемент для копирования
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = invoiceContent.innerHTML;
+            
+            // Убираем стили для чистого текста
+            const textContent = tempDiv.innerText || tempDiv.textContent;
+            
+            // Пытаемся скопировать в буфер обмена
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textContent).then(() => {
+                    showAlert('Инвойс скопирован в буфер обмена!', 'success');
+                }).catch(err => {
+                    console.error('Ошибка копирования:', err);
+                    fallbackCopyTextToClipboard(textContent);
+                });
+            } else {
+                fallbackCopyTextToClipboard(textContent);
+            }
+        }
+
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showAlert('Инвойс скопирован в буфер обмена!', 'success');
+                } else {
+                    showAlert('Не удалось скопировать в буфер обмена', 'danger');
+                }
+            } catch (err) {
+                console.error('Ошибка копирования:', err);
+                showAlert('Не удалось скопировать в буфер обмена', 'danger');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        function generateDeliveryFromInvoice() {
+            const invoiceNumber = document.getElementById('invoiceNumber').value.trim();
+            const invoiceDate = document.getElementById('invoiceDate').value;
+            const invoiceDueDate = document.getElementById('invoiceDueDate').value;
+            const clientIndex = document.getElementById('invoiceClient').value;
+            const delivery = document.getElementById('invoiceDelivery').value;
+
+            if (!invoiceNumber || !invoiceDate || !invoiceDueDate || clientIndex === '') {
+                showAlert('Сначала заполните данные инвойса!', 'danger');
+                return;
+            }
+
+            const items = [];
+            const itemRows = document.querySelectorAll('.invoice-items');
+            
+            itemRows.forEach(row => {
+                const productIndex = row.querySelector('.invoice-product').value;
+                const quantity = parseInt(row.querySelector('.invoice-quantity').value);
+
+                if (productIndex !== '' && quantity > 0) {
+                    const product = products[productIndex];
+                    items.push({
+                        product: product,
+                        quantity: quantity
+                    });
+                }
+            });
+
+            if (items.length === 0) {
+                showAlert('Добавьте товары в инвойс!', 'danger');
+                return;
+            }
+
+            showTab('delivery');
+            
+            document.getElementById('deliveryNumber').value = invoiceNumber;
+            document.getElementById('deliveryDate').value = invoiceDate;
+            document.getElementById('deliveryDueDate').value = invoiceDueDate;
+            document.getElementById('deliveryClient').value = clientIndex;
+            document.getElementById('deliveryMethod').value = delivery;
+
+            const container = document.getElementById('deliveryItems');
+            container.innerHTML = '';
+
+            items.forEach((item, index) => {
+                const productIndex = products.findIndex(p => p.code === item.product.code);
+                
+                const newItem = document.createElement('div');
+                newItem.className = 'delivery-items';
+                newItem.innerHTML = `
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Товар *</label>
+                        <div class="searchable-select">
+                            <input type="text" class="searchable-input delivery-product-search" placeholder="Введите код или название товара..." value="${item.product.code} - ${item.product.name}" autocomplete="off">
+                            <input type="hidden" class="delivery-product" value="${productIndex}">
+                            <div class="dropdown-menu delivery-product-dropdown"></div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Количество</label>
+                        <input type="number" class="delivery-quantity" value="${item.quantity}" min="1">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Единица</label>
+                        <input type="text" class="delivery-unit" value="ком" readonly>
+                    </div>
+                    <div style="padding-top: 25px;">
+                        <button class="btn btn-danger" onclick="removeDeliveryItem(this)">Удалить</button>
+                    </div>
+                `;
+                container.appendChild(newItem);
+                
+                // Инициализировать поиск для нового поля
+                const newSearch = newItem.querySelector('.delivery-product-search');
+                setupProductSearch(newSearch);
+            });
+
+            showAlert('Данные инвойса скопированы в отпремницу!', 'success');
+        }
+
+        // Отпремницы
+        function addDeliveryItem() {
+            const container = document.getElementById('deliveryItems');
+            if(!container) return;
+
+            const newItem = document.createElement('div');
+            newItem.className = 'delivery-items';
+            
+            newItem.innerHTML = `
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label>Товар *</label>
+                    <div class="searchable-select">
+                        <input type="text" class="searchable-input delivery-product-search" placeholder="Введите код или название товара..." autocomplete="off">
+                        <input type="hidden" class="delivery-product" value="">
+                        <div class="dropdown-menu delivery-product-dropdown"></div>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label>Количество</label>
+                    <input type="number" class="delivery-quantity" value="1" min="1">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label>Единица</label>
+                    <input type="text" class="delivery-unit" value="ком" readonly>
+                </div>
+                <div style="padding-top: 25px;">
+                    <button class="btn btn-danger" onclick="removeDeliveryItem(this)">Удалить</button>
+                </div>
+            `;
+            
+            container.appendChild(newItem);
+            
+            // Инициализировать поиск для нового поля
+            const newSearch = newItem.querySelector('.delivery-product-search');
+            setupProductSearch(newSearch);
+        }
+
+        function removeDeliveryItem(button) {
+            const container = document.getElementById('deliveryItems');
+            if(!container) return;
+            
+            if (container.children.length > 1) {
+                button.closest('.delivery-items').remove();
+            } else {
+                showAlert('Должен остаться хотя бы один товар!', 'danger');
+            }
+        }
+
+        function generateDelivery() {
+            const deliveryNumber = document.getElementById('deliveryNumber').value.trim();
+            const deliveryDate = document.getElementById('deliveryDate').value;
+            const deliveryDueDate = document.getElementById('deliveryDueDate').value;
+            const clientIndex = document.getElementById('deliveryClient').value;
+            const method = document.getElementById('deliveryMethod').value;
+
+            if (!deliveryNumber || !deliveryDate || !deliveryDueDate || clientIndex === '') {
+                showAlert('Заполните все обязательные поля!', 'danger');
+                return;
+            }
+
+            const items = [];
+            const itemRows = document.querySelectorAll('.delivery-items');
+            
+            itemRows.forEach(row => {
+                const hiddenProduct = row.querySelector('.delivery-product');
+                const productIndex = hiddenProduct.value;
+                const quantity = parseInt(row.querySelector('.delivery-quantity').value);
+                const unit = row.querySelector('.delivery-unit').value;
+
+                if (productIndex !== '' && quantity > 0) {
+                    const product = products[productIndex];
+                    items.push({
+                        product: product,
+                        quantity: quantity,
+                        unit: unit
+                    });
+                }
+            });
+
+            if (items.length === 0) {
+                showAlert('Добавьте хотя бы один товар!', 'danger');
+                return;
+            }
+
+            const client = clients[clientIndex];
+
+            let itemsHTML = '';
+            items.forEach(item => {
+                itemsHTML += `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 4px 6px; border-bottom: 1px solid #eee; font-size: 10px;">${item.product.code}/${item.product.name}</td>
+                        <td style="padding: 4px 6px; border-bottom: 1px solid #eee; text-align: center; font-size: 10px;">${item.quantity}</td>
+                        <td style="padding: 4px 6px; border-bottom: 1px solid #eee; text-align: center; font-size: 10px;">${item.unit}</td>
+                    </tr>
+                `;
+            });
+
+            const deliveryHTML = `
+                <div style="max-width: 210mm; margin: 0 auto; padding: 10mm; font-family: 'Segoe UI', Arial, sans-serif; background: white; line-height: 1.3; font-size: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <img src="https://i.ibb.co/tMCT4jb7/srb-white-verical.png" alt="srb-white-verical" border="0" style="width: 70px; height: auto; border-radius: 10px; background: #000; padding: 8px;">
+                            <div>
+                                <h2 style="margin: 0; font-size: 15px; color: #333; line-height: 1.2;">Среħа 2024 ДОО Београд (Стари Град)</h2>
+                                <p style="margin: 1px 0; color: #666; font-size: 10px;">Matični broj: 22019309</p>
+                                <p style="margin: 1px 0; color: #666; font-size: 10px;">PIB: 114407658</p>
+                                <p style="margin: 1px 0; color: #666; font-size: 10px;">Sedište: Beograd, Stari Grad, Мајке Јевросиме 35</p>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <h1 style="margin: 0; font-size: 32px; color: #666; font-weight: 300;">ОТПРЕМНИЦА</h1>
+                            <p style="margin: 3px 0 0 0; font-size: 13px; color: #666;"># ${deliveryNumber}</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 15px;">
+                        <div>
+                            <h4 style="margin: 0 0 6px 0; color: #333; font-size: 11px;">Поручилац:</h4>
+                            <div style="font-size: 10px; line-height: 1.3;">
+                                <p style="margin: 0; font-weight: bold;">${client.name}</p>
+                                <p style="margin: 0;">Matični broj: ${client.mb}</p>
+                                <p style="margin: 0;">PIB: ${client.pib}</p>
+                                <p style="margin: 0;">Sedište: ${client.address}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="margin: 0 0 6px 0; color: #333; font-size: 11px;">Испорука на адресу:</h4>
+                            <p style="margin: 0; font-size: 10px;">${client.address}</p>
+                            <p style="margin: 6px 0 0 0; font-size: 10px;"><strong>Начин:</strong> ${method}</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <p style="margin: 2px 0; font-size: 10px;"><strong>Дата:</strong> ${new Date(deliveryDate).toLocaleDateString('sr-RS')}</p>
+                        <p style="margin: 2px 0; font-size: 10px;"><strong>Рок испоруке:</strong> ${new Date(deliveryDueDate).toLocaleDateString('sr-RS')}</p>
+                    </div>
+
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10px;">
+                        <thead>
+                            <tr style="background: #333; color: white;">
+                                <th style="padding: 6px; text-align: left; font-size: 10px; font-weight: normal;">Назив артикла</th>
+                                <th style="padding: 6px; text-align: center; font-size: 10px; font-weight: normal;">Количина</th>
+                                <th style="padding: 6px; text-align: center; font-size: 10px; font-weight: normal;">Јединица мере</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsHTML}
+                        </tbody>
+                    </table>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ddd;">
+                        <div style="text-align: center;">
+                            <div style="border-bottom: 2px solid #333; margin-bottom: 6px; height: 25px;"></div>
+                            <div style="font-size: 10px;"><strong>Издао</strong></div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="border-bottom: 2px solid #333; margin-bottom: 6px; height: 25px;"></div>
+                            <div style="font-size: 10px;"><strong>Примио</strong></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 15px; text-align: center; font-size: 9px; color: #666;">
+                        Овај документ је генерисан електронски и важи без печата и потписа
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('deliveryContent').innerHTML = deliveryHTML;
+            document.getElementById('deliveryPreview').style.display = 'block';
+            document.getElementById('deliveryPreview').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function printDelivery() {
+            const deliveryContent = document.getElementById('deliveryContent').innerHTML;
+            const deliveryNumber = document.getElementById('deliveryNumber').value;
+            
+            const fullHTML = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Отпремница ${deliveryNumber}</title>
+                    <style>
+                        @page {
+                            size: A4;
+                            margin: 15mm;
+                        }
+                        body {
+                            margin: 0;
+                            padding: 0;
+                            font-family: 'Segoe UI', Arial, sans-serif;
+                        }
+                        @media print {
+                            body {
+                                -webkit-print-color-adjust: exact;
+                                print-color-adjust: exact;
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${deliveryContent}
+                </body>
+                </html>
+            `;
+            
+            const printWindow = window.open('', '_blank');
+            if (printWindow) {
+                printWindow.document.write(fullHTML);
+                printWindow.document.close();
+                
+                printWindow.onload = function() {
+                    setTimeout(() => {
+                        printWindow.print();
+                        setTimeout(() => {
+                            if (!printWindow.closed) {
+                                printWindow.close();
+                            }
+                        }, 1000);
+                    }, 500);
+                };
+            } else {
+                // Fallback - скачивание HTML файла
+                const blob = new Blob([fullHTML], { type: 'text/html;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `Otpremnica_${deliveryNumber.replace(/[^a-zA-Z0-9]/g, '_')}.html`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                URL.revokeObjectURL(url);
+            }
+            
+            showAlert('Отпремница готова для экспорта!', 'success');
+        }
+
+        // Статистика
+        function initializeStatistics() {
+            const today = new Date();
+            const firstDayOfYear = new Date(today.getFullYear(), 0, 1);
+            
+            document.getElementById('statsFromDate').value = firstDayOfYear.toISOString().split('T')[0];
+            document.getElementById('statsToDate').value = today.toISOString().split('T')[0];
+            
+            updateStatistics();
+        }
+
+        function updateStatistics() {
+            const fromDate = new Date(document.getElementById('statsFromDate').value);
+            const toDate = new Date(document.getElementById('statsToDate').value);
+            toDate.setHours(23, 59, 59, 999);
+            
+            const filteredInvoices = confirmedInvoices.filter(invoice => {
+                const invoiceDate = new Date(invoice.date);
+                return invoiceDate >= fromDate && invoiceDate <= toDate;
+            });
+
+            const totalRevenue = filteredInvoices.reduce((sum, inv) => sum + inv.total, 0);
+            const totalInvoicesCount = filteredInvoices.length;
+            const uniqueClients = new Set(filteredInvoices.map(inv => inv.client.name)).size;
+            const averageOrder = totalInvoicesCount > 0 ? totalRevenue / totalInvoicesCount : 0;
+
+            document.getElementById('totalRevenue').textContent = totalRevenue.toFixed(2) + ' RSD';
+            document.getElementById('totalInvoices').textContent = totalInvoicesCount;
+            document.getElementById('totalClients').textContent = uniqueClients;
+            document.getElementById('averageOrder').textContent = averageOrder.toFixed(2) + ' RSD';
+
+            updateInvoicesList(filteredInvoices);
+            updateRevenueChart(filteredInvoices);
+            updateProductsChart(filteredInvoices);
+            updateClientsChart(filteredInvoices);
+        }
+
+        function updateRevenueChart(invoices) {
+            const chartEl = document.getElementById('revenueChart');
+            if(!chartEl) return;
+
+            if (invoices.length === 0) {
+                chartEl.innerHTML = '<div style="text-align: center; padding: 50px; color: #666;">Нет данных за выбранный период</div>';
+                return;
+            }
+
+            const monthlyData = {};
+            invoices.forEach(invoice => {
+                const date = new Date(invoice.date);
+                const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                monthlyData[monthKey] = (monthlyData[monthKey] || 0) + invoice.total;
+            });
+
+            let chartHTML = '<div style="display: flex; align-items: end; height: 200px; gap: 10px; padding: 20px;">';
+            const maxValue = Math.max(...Object.values(monthlyData));
+            const months = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
+            
+            Object.entries(monthlyData).forEach(([monthKey, value]) => {
+                const [year, month] = monthKey.split('-');
+                const monthName = months[parseInt(month) - 1];
+                const height = (value / maxValue) * 150;
+                chartHTML += `
+                    <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+                        <div style="font-size: 12px; margin-bottom: 5px; font-weight: bold;">${value.toFixed(0)} RSD</div>
+                        <div style="width: 40px; height: ${height}px; background: linear-gradient(to top, #212529, #343a40); border-radius: 4px 4px 0 0;"></div>
+                        <div style="font-size: 12px; margin-top: 5px; text-align: center;">${monthName}<br>${year}</div>
+                    </div>
+                `;
+            });
+            chartHTML += '</div>';
+            chartEl.innerHTML = chartHTML;
+        }
+
+        function updateProductsChart(invoices) {
+            const chartEl = document.getElementById('productsChart');
+            if(!chartEl) return;
+
+            const productData = {};
+            invoices.forEach(invoice => {
+                invoice.items.forEach(item => {
+                    const key = item.product.code;
+                    if (!productData[key]) {
+                        productData[key] = {
+                            name: item.product.name,
+                            quantity: 0,
+                            revenue: 0
+                        };
+                    }
+                    productData[key].quantity += item.quantity;
+                    productData[key].revenue += item.amount;
+                });
+            });
+
+            const sortedProducts = Object.entries(productData)
+                .sort((a, b) => b[1].revenue - a[1].revenue)
+                .slice(0, 10);
+
+            if (sortedProducts.length === 0) {
+                chartEl.innerHTML = '<div style="text-align: center; padding: 50px; color: #666;">Нет данных за выбранный период</div>';
+                return;
+            }
+
+            const maxRevenue = sortedProducts[0][1].revenue;
+            let chartHTML = '<div style="padding: 20px;">';
+            
+            sortedProducts.forEach(([code, data]) => {
+                const percentage = (data.revenue / maxRevenue) * 100;
+                chartHTML += `
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="font-weight: bold; font-size: 14px;">${code}</span>
+                            <span style="font-size: 14px;">${data.revenue.toFixed(2)} RSD (${data.quantity} шт)</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: #e9ecef; border-radius: 4px;">
+                            <div style="width: ${percentage}%; height: 100%; background: linear-gradient(to right, #28a745, #20c997); border-radius: 4px;"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            chartHTML += '</div>';
+            chartEl.innerHTML = chartHTML;
+        }
+
+        function updateClientsChart(invoices) {
+            const chartEl = document.getElementById('clientsChart');
+            if(!chartEl) return;
+
+            const clientData = {};
+            invoices.forEach(invoice => {
+                const clientName = invoice.client.name;
+                clientData[clientName] = (clientData[clientName] || 0) + invoice.total;
+            });
+
+            const sortedClients = Object.entries(clientData)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+
+            if (sortedClients.length === 0) {
+                chartEl.innerHTML = '<div style="text-align: center; padding: 50px; color: #666;">Нет данных за выбранный период</div>';
+                return;
+            }
+
+            const maxRevenue = sortedClients[0][1];
+            let chartHTML = '<div style="padding: 20px;">';
+            
+            sortedClients.forEach(([clientName, revenue]) => {
+                const percentage = (revenue / maxRevenue) * 100;
+                chartHTML += `
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="font-weight: bold; font-size: 14px;">${clientName}</span>
+                            <span style="font-size: 14px;">${revenue.toFixed(2)} RSD</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: #e9ecef; border-radius: 4px;">
+                            <div style="width: ${percentage}%; height: 100%; background: linear-gradient(to right, #212529, #343a40); border-radius: 4px;"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            chartHTML += '</div>';
+            chartEl.innerHTML = chartHTML;
+        }
+
+        function updateInvoicesList(invoices) {
+            const container = document.getElementById('confirmedInvoicesList');
+            if(!container) return;
+
+            if (invoices.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666;">Нет утвержденных инвойсов за выбранный период</p>';
+                return;
+            }
+
+            let listHTML = '';
+            invoices.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach((invoice, index) => {
+                const date = new Date(invoice.date).toLocaleDateString('sr-RS');
+                const originalIndex = confirmedInvoices.findIndex(inv => inv.number === invoice.number);
+                listHTML += `
+                    <div class="invoice-item">
+                        <div class="invoice-info">
+                            <div style="font-weight: bold; color: #212529;">Инвойс #${invoice.number}</div>
+                            <div style="font-size: 14px; color: #666; margin-top: 5px;">${invoice.client.name} • ${date} • ${invoice.total.toFixed(2)} RSD</div>
+                            <div style="font-size: 12px; color: #888; margin-top: 3px;">Товаров: ${invoice.items.length} • НДС: ${invoice.vatRate}%</div>
+                        </div>
+                        <div class="invoice-actions">
+                            <button class="btn btn-secondary" onclick="viewConfirmedInvoice(${originalIndex})" title="Просмотреть инвойс">Просмотр</button>
+                            <button class="btn btn-success" onclick="copyInvoiceData(${originalIndex})" title="Копировать данные в новый инвойс">Копировать</button>
+                            <span class="invoice-status">Утвержден</span>
+                            <button class="btn btn-danger" onclick="removeInvoiceFromStats('${invoice.number}')">Удалить</button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = listHTML;
+        }
+
+        function removeInvoiceFromStats(invoiceNumber) {
+            if (confirm('Удалить инвойс из статистики?')) {
+                confirmedInvoices = confirmedInvoices.filter(inv => inv.number !== invoiceNumber);
+                updateStatistics();
+                showAlert('Инвойс удален из статистики!', 'success');
+            }
+        }
+
+        function viewConfirmedInvoice(invoiceIndex) {
+            const invoice = confirmedInvoices[invoiceIndex];
+            if (!invoice) {
+                showAlert('Инвойс не найден!', 'danger');
+                return;
+            }
+
+            // Создаем модальное окно для просмотра
+            const modalHTML = `
+                <div id="invoiceViewModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; display: flex; align-items: center; justify-content: center;">
+                    <div style="background: white; border-radius: 15px; max-width: 90%; max-height: 90%; overflow: auto; position: relative;">
+                        <div style="position: sticky; top: 0; background: white; padding: 20px; border-bottom: 2px solid #e9ecef; border-radius: 15px 15px 0 0; display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="margin: 0; color: #212529;">Просмотр инвойса #${invoice.number}</h3>
+                            <div>
+                                <button class="btn btn-primary" onclick="exportModalInvoiceToPDF()">Экспорт PDF</button>
+                                <button class="btn btn-success" onclick="copyInvoiceData(${invoiceIndex})">Копировать данные</button>
+                                <button class="btn btn-danger" onclick="closeInvoiceViewModal()">Закрыть</button>
+                            </div>
+                        </div>
+                        <div id="modalInvoiceContent" style="padding: 20px;">
+                            ${generateInvoiceHTML(invoice)}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            // Сохраняем данные инвойса для экспорта
+            window.currentModalInvoice = invoice;
+        }
+
+        function closeInvoiceViewModal() {
+            const modal = document.getElementById('invoiceViewModal');
+            if (modal) {
+                modal.remove();
+            }
+            window.currentModalInvoice = null;
+        }
+
+        function exportModalInvoiceToPDF() {
+            if (!window.currentModalInvoice) {
+                showAlert('Нет данных для экспорта!', 'danger');
+                return;
+            }
+
+            const invoice = window.currentModalInvoice;
+            const invoiceContent = generateInvoiceHTML(invoice);
+            
+            const fullHTML = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Рачун ${invoice.number}</title>
+                    <style>
+                        @page {
+                            size: A4;
+                            margin: 15mm;
+                        }
+                        body {
+                            margin: 0;
+                            padding: 0;
+                            font-family: 'Segoe UI', Arial, sans-serif;
+                        }
+                        @media print {
+                            body {
+                                -webkit-print-color-adjust: exact;
+                                print-color-adjust: exact;
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${invoiceContent}
+                </body>
+                </html>
+            `;
+            
+            const printWindow = window.open('', '_blank');
+            if (printWindow) {
+                printWindow.document.write(fullHTML);
+                printWindow.document.close();
+                
+                printWindow.onload = function() {
+                    setTimeout(() => {
+                        printWindow.print();
+                        setTimeout(() => {
+                            if (!printWindow.closed) {
+                                printWindow.close();
+                            }
+                        }, 1000);
+                    }, 500);
+                };
+            }
+            
+            showAlert('Инвойс готов для экспорта!', 'success');
+        }
+
+        function copyInvoiceData(invoiceIndex) {
+            const invoice = confirmedInvoices[invoiceIndex];
+            if (!invoice) {
+                showAlert('Инвойс не найден!', 'danger');
+                return;
+            }
+
+            // Переключаемся на вкладку создания инвойса
+            showTab('invoice');
+            
+            // Закрываем модальное окно если оно открыто
+            closeInvoiceViewModal();
+
+            // Генерируем новый номер инвойса
+            const today = new Date();
+            const dateStr = `${String(today.getDate()).padStart(2, '0')}${String(today.getMonth() + 1).padStart(2, '0')}${today.getFullYear()}`;
+            const newInvoiceNumber = `${confirmedInvoices.length + 1}-${dateStr}`;
+
+            // Заполняем основные данные (с новым номером и текущей датой)
+            document.getElementById('invoiceNumber').value = newInvoiceNumber;
+            document.getElementById('invoiceDate').value = new Date().toISOString().split('T')[0];
+            
+            // Устанавливаем срок оплаты через 7 дней
+            const nextWeek = new Date();
+            nextWeek.setDate(nextWeek.getDate() + 7);
+            document.getElementById('invoiceDueDate').value = nextWeek.toISOString().split('T')[0];
+
+            // Находим индекс клиента
+            const clientIndex = clients.findIndex(c => c.name === invoice.client.name && c.mb === invoice.client.mb);
+            if (clientIndex !== -1) {
+                document.getElementById('invoiceClientSearch').value = invoice.client.name;
+                document.getElementById('invoiceClient').value = clientIndex;
+            }
+
+            // Устанавливаем способ доставки и НДС
+            document.getElementById('invoiceDelivery').value = invoice.delivery;
+            document.getElementById('invoiceVAT').value = invoice.vatRate;
+
+            // Устанавливаем адрес доставки если он отличается
+            if (invoice.isDifferentDeliveryAddress) {
+                document.getElementById('differentDeliveryAddress').checked = true;
+                document.getElementById('deliveryAddressSection').style.display = 'block';
+                
+                // Здесь можно добавить логику для заполнения полей адреса доставки
+                // если у вас есть структурированные данные адреса доставки в invoice
+            }
+
+            // Очищаем текущие товары и добавляем товары из инвойса
+            const container = document.getElementById('invoiceItems');
+            container.innerHTML = '';
+
+            invoice.items.forEach((item, index) => {
+                const productIndex = products.findIndex(p => p.code === item.product.code);
+                
+                if (productIndex !== -1) {
+                    const newItem = document.createElement('div');
+                    newItem.className = 'invoice-items';
+                    newItem.innerHTML = `
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Товар *</label>
+                            <div class="searchable-select">
+                                <input type="text" class="searchable-input invoice-product-search" placeholder="Введите код или название товара..." value="${item.product.code} - ${item.product.name}" autocomplete="off">
+                                <input type="hidden" class="invoice-product" value="${productIndex}">
+                                <div class="dropdown-menu invoice-product-dropdown"></div>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Количество</label>
+                            <input type="number" class="invoice-quantity" value="${item.quantity}" min="1">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Цена (RSD)</label>
+                            <input type="number" class="invoice-price" value="${item.price.toFixed(2)}" readonly style="background: #f8f9fa;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Сумма (RSD)</label>
+                            <input type="number" class="invoice-amount" value="${item.amount.toFixed(2)}" readonly style="background: #f8f9fa; font-weight: bold;">
+                        </div>
+                        <div style="padding-top: 25px;">
+                            <button class="btn btn-danger" onclick="removeInvoiceItem(this)">Удалить</button>
+                        </div>
+                    `;
+                    container.appendChild(newItem);
+                    
+                    // Инициализируем поиск для нового поля
+                    const newSearch = newItem.querySelector('.invoice-product-search');
+                    setupProductSearch(newSearch);
+                }
+            });
+
+            // Пересчитываем итоги
+            calculateInvoiceTotals();
+
+            showAlert('Данные инвойса скопированы! Обновлены номер и дата.', 'success');
+        }
+
+        function exportStatisticsToPDF() {
+            const fromDate = document.getElementById('statsFromDate').value;
+            const toDate = document.getElementById('statsToDate').value;
+            
+            if (!fromDate || !toDate) { 
+                showAlert('Выберите период!', 'danger'); 
+                return; 
+            }
+            
+            const filteredInvoices = confirmedInvoices.filter(invoice => {
+                const invoiceDate = new Date(invoice.date);
+                const from = new Date(fromDate);
+                const to = new Date(toDate);
+                to.setHours(23, 59, 59, 999);
+                return invoiceDate >= from && invoiceDate <= to;
+            });
+
+            if (filteredInvoices.length === 0) { 
+                showAlert('Нет данных для экспорта!', 'danger'); 
+                return; 
+            }
+            
+            const reportContent = generatePDFReport(filteredInvoices, fromDate, toDate);
+            
+            const printWindow = window.open('', '_blank');
+            if(printWindow) {
+                printWindow.document.write(reportContent);
+                printWindow.document.close();
+                setTimeout(() => { printWindow.print(); }, 500);
+            }
+            
+            showAlert('PDF отчет создан и готов к скачиванию!', 'success');
+        }
+
+        function generatePDFReport(invoices, fromDate, toDate) {
+            const totalRevenue = invoices.reduce((sum, inv) => sum + inv.total, 0);
+            const totalInvoicesCount = invoices.length;
+            const uniqueClients = new Set(invoices.map(inv => inv.client.name)).size;
+            const averageOrder = totalInvoicesCount > 0 ? totalRevenue / totalInvoicesCount : 0;
+
+            // Статистика по товарам
+            const productData = {};
+            invoices.forEach(invoice => {
+                invoice.items.forEach(item => {
+                    const key = item.product.code;
+                    if (!productData[key]) {
+                        productData[key] = {
+                            name: item.product.name,
+                            quantity: 0,
+                            revenue: 0
+                        };
+                    }
+                    productData[key].quantity += item.quantity;
+                    productData[key].revenue += item.amount;
+                });
+            });
+
+            const topProducts = Object.entries(productData)
+                .sort((a, b) => b[1].revenue - a[1].revenue)
+                .slice(0, 10);
+
+            // Статистика по клиентам
+            const clientData = {};
+            invoices.forEach(invoice => {
+                const clientName = invoice.client.name;
+                clientData[clientName] = (clientData[clientName] || 0) + invoice.total;
+            });
+
+            const topClients = Object.entries(clientData)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+
+            // Статистика по месяцам
+            const monthlyData = {};
+            invoices.forEach(invoice => {
+                const date = new Date(invoice.date);
+                const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                monthlyData[monthKey] = (monthlyData[monthKey] || 0) + invoice.total;
+            });
+
+            const formatDate = (dateStr) => {
+                const date = new Date(dateStr);
+                return date.toLocaleDateString('sr-RS');
+            };
+
+            const months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+
+            // Генерация диаграммы выручки по месяцам (текстовая)
+            let monthlyChartHTML = '';
+            if (Object.keys(monthlyData).length > 0) {
+                const maxValue = Math.max(...Object.values(monthlyData));
+                Object.entries(monthlyData).forEach(([monthKey, value]) => {
+                    const [year, month] = monthKey.split('-');
+                    const monthName = months[parseInt(month) - 1];
+                    const percentage = (value / maxValue) * 100;
+                    monthlyChartHTML += `
+                        <tr>
+                            <td style="padding: 6px; border: 1px solid #ddd;">${monthName} ${year}</td>
+                            <td style="padding: 6px; border: 1px solid #ddd; text-align: right;">${value.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} RSD</td>
+                            <td style="padding: 6px; border: 1px solid #ddd;">
+                                <div style="background: #e9ecef; height: 20px; border-radius: 3px;">
+                                    <div style="background: linear-gradient(to right, #212529, #343a40); height: 100%; width: ${percentage}%; border-radius: 3px;"></div>
+                                </div>
+                            </td>
+                            <td style="padding: 6px; border: 1px solid #ddd; text-align: center;">${((value / totalRevenue) * 100).toFixed(1)}%</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            // Генерация диаграммы товаров
+            let productsChartHTML = '';
+            if (topProducts.length > 0) {
+                const maxRevenue = topProducts[0][1].revenue;
+                topProducts.forEach(([code, data]) => {
+                    const percentage = (data.revenue / maxRevenue) * 100;
+                    const revenuePercentage = ((data.revenue / totalRevenue) * 100).toFixed(1);
+                    productsChartHTML += `
+                        <tr>
+                            <td style="padding: 6px; border: 1px solid #ddd;"><strong>${code}</strong></td>
+                            <td style="padding: 6px; border: 1px solid #ddd;">${data.name}</td>
+                            <td style="padding: 6px; border: 1px solid #ddd; text-align: center;">${data.quantity}</td>
+                            <td style="padding: 6px; border: 1px solid #ddd; text-align: right;">${data.revenue.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} RSD</td>
+                            <td style="padding: 6px; border: 1px solid #ddd;">
+                                <div style="background: #e9ecef; height: 15px; border-radius: 3px;">
+                                    <div style="background: linear-gradient(to right, #28a745, #20c997); height: 100%; width: ${percentage}%; border-radius: 3px;"></div>
+                                </div>
+                            </td>
+                            <td style="padding: 6px; border: 1px solid #ddd; text-align: center;">${revenuePercentage}%</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            // Генерация диаграммы клиентов
+            let clientsChartHTML = '';
+            if (topClients.length > 0) {
+                const maxRevenue = topClients[0][1];
+                topClients.forEach(([clientName, revenue]) => {
+                    const percentage = (revenue / maxRevenue) * 100;
+                    const revenuePercentage = ((revenue / totalRevenue) * 100).toFixed(1);
+                    const orderCount = invoices.filter(inv => inv.client.name === clientName).length;
+                    clientsChartHTML += `
+                        <tr>
+                            <td style="padding: 6px; border: 1px solid #ddd;"><strong>${clientName}</strong></td>
+                            <td style="padding: 6px; border: 1px solid #ddd; text-align: right;">${revenue.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} RSD</td>
+                            <td style="padding: 6px; border: 1px solid #ddd; text-align: center;">${orderCount}</td>
+                            <td style="padding: 6px; border: 1px solid #ddd;">
+                                <div style="background: #e9ecef; height: 15px; border-radius: 3px;">
+                                    <div style="background: linear-gradient(to right, #212529, #343a40); height: 100%; width: ${percentage}%; border-radius: 3px;"></div>
+                                </div>
+                            </td>
+                            <td style="padding: 6px; border: 1px solid #ddd; text-align: center;">${revenuePercentage}%</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            let invoicesListHTML = '';
+            invoices.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(invoice => {
+                const date = new Date(invoice.date).toLocaleDateString('sr-RS');
+                invoicesListHTML += `
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 6px; border: 1px solid #ddd;"><strong>${invoice.number}</strong></td>
+                        <td style="padding: 6px; border: 1px solid #ddd;">${date}</td>
+                        <td style="padding: 6px; border: 1px solid #ddd;">${invoice.client.name}</td>
+                        <td style="padding: 6px; border: 1px solid #ddd; text-align: center;">${invoice.items.length}</td>
+                        <td style="padding: 6px; border: 1px solid #ddd; text-align: right;">${invoice.total.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} RSD</td>
+                        <td style="padding: 6px; border: 1px solid #ddd; text-align: center;">${invoice.vatRate}%</td>
+                    </tr>
+                `;
+            });
+
+            return `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Отчет по продажам</title>
+                    <style>
+                        @page { size: A4; margin: 15mm; }
+                        body { font-family: Arial, sans-serif; margin: 0; padding: 0; font-size: 11px; line-height: 1.3; }
+                        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #212529; padding-bottom: 15px; }
+                        .logo { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px; }
+                        table { width: 100%; border-collapse: collapse; margin: 15px 0; page-break-inside: avoid; }
+                        th { background: #212529; color: white; padding: 8px; text-align: left; font-size: 10px; }
+                        td { border: 1px solid #ddd; padding: 6px; font-size: 10px; }
+                        tr:nth-child(even) { background: #f9f9f9; }
+                        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px 0; }
+                        .stat-box { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; padding: 10px; text-align: center; border-left: 3px solid #212529; }
+                        .stat-number { font-size: 16px; font-weight: bold; color: #212529; margin-bottom: 3px; }
+                        .stat-label { font-size: 9px; color: #666; }
+                        h2 { color: #212529; border-bottom: 1px solid #212529; padding-bottom: 5px; margin: 20px 0 10px 0; font-size: 14px; }
+                        h3 { color: #212529; margin: 15px 0 8px 0; font-size: 12px; }
+                        .section { page-break-inside: avoid; margin-bottom: 20px; }
+                        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #212529; color: #666; font-size: 9px; }
+                    </style>
+                </head>
+                <body>
+                    <!-- Заголовок с логотипом -->
+                    <div class="header">
+                        <div class="logo">
+                            <img src="https://i.ibb.co/tMCT4jb7/srb-white-verical.png" alt="Среħа 2024 ДОО" style="width: 60px; height: auto; background: #000; border-radius: 8px; padding: 6px;">
+                            <div style="text-align: left;">
+                                <h1 style="margin: 0; color: #212529; font-size: 18px;">Среħа 2024 ДОО</h1>
+                                <p style="margin: 2px 0; color: #666; font-size: 10px;">Београд, Стари Град, Мајке Јевросиме 35</p>
+                                <p style="margin: 2px 0; color: #666; font-size: 10px;">МБ: 22019309 | ПИБ: 114407658</p>
+                            </div>
+                        </div>
+                        <h2 style="margin: 10px 0 5px 0; font-size: 16px; border: none;">ОТЧЕТ ПО ПРОДАЖАМ</h2>
+                        <p style="margin: 0; color: #666; font-size: 11px;">
+                            Период: ${formatDate(fromDate)} - ${formatDate(toDate)} | 
+                            Сгенерировано: ${new Date().toLocaleDateString('sr-RS')} в ${new Date().toLocaleTimeString('sr-RS')}
+                        </p>
+                    </div>
+
+                    <!-- Общая статистика -->
+                    <div class="section">
+                        <h2>КЛЮЧЕВЫЕ ПОКАЗАТЕЛИ</h2>
+                        <div class="stats-grid">
+                            <div class="stat-box">
+                                <div class="stat-number">${totalRevenue.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} RSD</div>
+                                <div class="stat-label">Общая выручка</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number">${totalInvoicesCount}</div>
+                                <div class="stat-label">Количество инвойсов</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number">${uniqueClients}</div>
+                                <div class="stat-label">Уникальных клиентов</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number">${averageOrder.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} RSD</div>
+                                <div class="stat-label">Средний заказ</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Выручка по месяцам -->
+                    ${Object.keys(monthlyData).length > 0 ? `
+                    <div class="section">
+                        <h2>ВЫРУЧКА ПО МЕСЯЦАМ</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Месяц</th>
+                                    <th>Выручка</th>
+                                    <th>Диаграмма</th>
+                                    <th>% от общей</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${monthlyChartHTML}
+                            </tbody>
+                        </table>
+                    </div>
+                    ` : ''}
+
+                    <!-- Топ товаров -->
+                    ${topProducts.length > 0 ? `
+                    <div class="section">
+                        <h2>ТОП ТОВАРОВ ПО ПРОДАЖАМ</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Код</th>
+                                    <th>Название</th>
+                                    <th>Кол-во</th>
+                                    <th>Выручка</th>
+                                    <th>Диаграмма</th>
+                                    <th>% от общей</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${productsChartHTML}
+                            </tbody>
+                        </table>
+                    </div>
+                    ` : ''}
+
+                    <!-- Топ клиентов -->
+                    ${topClients.length > 0 ? `
+                    <div class="section">
+                        <h2>ТОП КЛИЕНТОВ ПО ВЫРУЧКЕ</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Клиент</th>
+                                    <th>Выручка</th>
+                                    <th>Заказов</th>
+                                    <th>Диаграмма</th>
+                                    <th>% от общей</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${clientsChartHTML}
+                            </tbody>
+                        </table>
+                    </div>
+                    ` : ''}
+
+                    <!-- Детализация инвойсов -->
+                    <div class="section">
+                        <h2>ДЕТАЛИЗАЦИЯ ПО ИНВОЙСАМ</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>№ Инвойса</th>
+                                    <th>Дата</th>
+                                    <th>Клиент</th>
+                                    <th>Товаров</th>
+                                    <th>Сумма</th>
+                                    <th>НДС</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${invoicesListHTML}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Подвал -->
+                    <div class="footer">
+                        <p><strong>Среħа 2024 ДОО</strong> | Београд, Стари Град, Мајке Јевросиме 35 | МБ: 22019309 | ПИБ: 114407658</p>
+                        <p>Этот отчет содержит ${totalInvoicesCount} инвойсов на общую сумму ${totalRevenue.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} RSD</p>
+                    </div>
+                </body>
+                </html>
+            `;
+        }
+
+        // Обработчики событий
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('invoice-quantity')) {
+                const row = e.target.closest('.invoice-items');
+                const hiddenProduct = row.querySelector('.invoice-product');
+                const productIndex = hiddenProduct.value;
+                
+                if (productIndex !== '') {
+                    const product = products[productIndex];
+                    const quantity = parseInt(e.target.value) || 1;
+                    const amountInput = row.querySelector('.invoice-amount');
+                    amountInput.value = (product.price * quantity).toFixed(2);
+                }
+                calculateInvoiceTotals();
+            }
+
+            if (e.target.id === 'invoiceVAT') {
+                calculateInvoiceTotals();
+            }
+        });
+    </script>
+</body>
+</html>
