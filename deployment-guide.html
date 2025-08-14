@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Инструкция по развертыванию Srecha Invoice System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            height: 100%;
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .step {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .step.active {
+            opacity: 1;
+            transform: scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .step.completed {
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 5px solid #4CAF50;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .step-number {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 18px;
+        }
+
+        .step-number.completed {
+            background: #4CAF50;
+        }
+
+        .step-number.completed::after {
+            content: '✓';
+        }
+
+        .step-title {
+            font-size: 1.5em;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .step-content {
+            padding-left: 55px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            position: relative;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            overflow-x: auto;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #4a5568;
+        }
+
+        .code-title {
+            color: #a0aec0;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .copy-btn {
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+
+        .copy-btn.copied {
+            background: #48bb78;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #856404;
+        }
+
+        .warning::before {
+            content: '⚠️ ';
+            font-weight: bold;
+        }
+
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #0c5460;
+        }
+
+        .info::before {
+            content: 'ℹ️ ';
+            font-weight: bold;
+        }
+
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #155724;
+        }
+
+        .success::before {
+            content: '✅ ';
+            font-weight: bold;
+        }
+
+        .link {
+            color: #4299e1;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .link:hover {
+            color: #3182ce;
+            text-decoration: underline;
+        }
+
+        .checklist {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item:hover {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            margin-right: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox.checked {
+            background: #4CAF50;
+            border-color: #4CAF50;
+            color: white;
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            display: block;
+            text-align: center;
+            line-height: 16px;
+            font-weight: bold;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .floating-help {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #4299e1;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .floating-help:hover {
+            transform: scale(1.1);
+            background: #3182ce;
+        }
+
+        .help-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+        }
+
+        .help-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 30px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .step-content {
+                padding-left: 0;
+            }
+            
+            .code-block {
+                font-size: 12px;
+                padding: 15px;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        .tooltip {
+            position: relative;
+            cursor: help;
+            border-bottom: 1px dotted #666;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Развертывание Srecha Invoice System</h1>
+            <p>Пошаговая инструкция для начинающих</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Шаг 0 из 8</div>
+        </div>
+
+        <!-- Шаг 1: Требования -->
+        <div class="step" id="step-1">
+            <div class="step-header" onclick="toggleStep(1)">
+                <div class="step-number" id="step-number-1">1</div>
+                <div class="step-title">Системные требования</div>
+            </div>
+            <div class="step-content">
+                <p>Убедитесь, что на вашем компьютере установлены следующие программы:</p>
+                
+                <div class="checklist">
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span><span class="tooltip" data-tooltip="Среда выполнения JavaScript">Node.js</span> версии 16+ (<a href="https://nodejs.org/" class="link" target="_blank">скачать</a>)</span>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span><span class="tooltip" data-tooltip="Реляционная база данных">PostgreSQL</span> 12+ (<a href="https://www.postgresql.org/download/" class="link" target="_blank">скачать</a>)</span>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span><span class="tooltip" data-tooltip="Система контроля версий">Git</span> (<a href="https://git-scm.com/" class="link" target="_blank">скачать</a>)</span>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Текстовый редактор (рекомендуется <a href="https://code.visualstudio.com/" class="link" target="_blank">VS Code</a>)</span>
+                    </div>
+                </div>
+
+                <div class="info">
+                    <strong>Проверка установки:</strong> Откройте командную строку/терминал и выполните команды ниже для проверки версий.
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Проверка версий</span>
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'node --version\nnpm --version\npsql --version\ngit --version')">Копировать</button>
+                    </div>
+                    <pre>node --version
+npm --version
+psql --version
+git --version</pre>
+                </div>
+
+                <div class="success">
+                    Если все команды выводят номера версий, значит все установлено правильно!
+                </div>
+            </div>
+        </div>
+
+        <!-- Шаг 2: Скачивание проекта -->
+        <div class="step" id="step-2">
+            <div class="step-header" onclick="toggleStep(2)">
+                <div class="step-number" id="step-number-2">2</div>
+                <div class="step-title">Скачивание проекта</div>
+            </div>
+            <div class="step-content">
+                <p>Создайте папку для проекта и скачайте исходный код:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Создание папки проекта</span>
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'mkdir srecha-invoice\ncd srecha-invoice')">Копировать</button>
+                    </div>
+                    <pre>mkdir srecha-invoice
+cd srecha-invoice</pre>
+                </div>
+
+                <div class="warning">
+                    Если у вас есть ZIP-архив с проектом, распакуйте его в созданную папку и пропустите команду git clone.
+                </div>
+
+                <div class="info">
+                    Если проект находится в Git-репозитории, клонируйте его:
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Клонирование из Git (опционально)</span>
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'git clone <URL_РЕПОЗИТОРИЯ> .\n# Замените <URL_РЕПОЗИТОРИЯ> на реальный адрес')">Копировать</button>
+                    </div>
+                    <pre>git clone &lt;URL_РЕПОЗИТОРИЯ&gt; .
+# Замените &lt;URL_РЕПОЗИТОРИЯ&gt; на реальный адрес</pre>
+                </div>
+
+                <div class="checklist">
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Папка проекта создана</span>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Исходный код проекта скачан</span>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Перешел в папку проекта через командную строку</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Шаг 3: Настройка базы данных -->
+        <div class="step" id="step-3">
+            <div class="step-header" onclick="toggleStep(3)">
+                <div class="step-number" id="step-number-3">3</div>
+                <div class="step-title">Настройка базы данных PostgreSQL</div>
+            </div>
+            <div class="step-content">
+                <p>Создайте базу данных для проекта:</p>
+
+                <div class="warning">
+                    Убедитесь, что PostgreSQL запущен на вашем компьютере. В Windows это можно проверить через "Службы", в macOS/Linux - через системный монитор.
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Подключение к PostgreSQL</span>
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'psql -U postgres')">Копировать</button>
+                    </div>
+                    <pre>psql -U postgres</pre>
+                </div>
+
+                <div class="info">
+                    Система попросит ввести пароль для пользователя postgres. Введите пароль, который вы указали при установке PostgreSQL.
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Создание базы данных</span>
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'CREATE DATABASE srecha_invoice;\n\\q')">Копировать</button>
+                    </div>
+                    <pre>CREATE DATABASE srecha_invoice;
+\q</pre>
+                </div>
+
+                <div class="success">
+                    База данных создана! Теперь выйдите из psql командой \q
+                </div>
+
+                <div class="checklist">
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>PostgreSQL запущен</span>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Подключился к PostgreSQL</span>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>База данных srecha_invoice создана</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Шаг 4: Установка зависимостей -->
+        <div class="step" id="step-4">
+            <div class="step-header" onclick="toggleStep(4)">
+                <div class="step-number" id="step-number-4">4</div>
+                <div class="step-title">Установка зависимостей</div>
+            </div>
+            <div class="step-content">
+                <p>Установите все необходимые пакеты для работы приложения:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Установка зависимостей</span>
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'npm install')">Копировать</button>
+                    </div>
+                    <pre>npm install</pre>
+                </div>
+
+                <div class="info">
+                    Эта команда может занять несколько минут. Она загрузит и установит все библиотеки, необходимые для работы приложения.
+                </div>
+
+                <div class="warning">
+                    Если возникают ошибки при установке, попробуйте очистить кэш npm:
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Очистка кэша (при ошибках)</span>
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'npm cache clean --force\nnpm install')">Копировать</button>
+                    </div>
+                    <pre>npm cache clean --force
+npm install</pre>
+                </div>
+
+                <div class="checklist">
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Команда npm install выполнена успешно</span>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Папка node_modules создалась</span>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Файл package-lock.json появился</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Шаг 5: Настройка переменных окружения -->
+        <div class="step" id="step-5">
+            <div class="step-header" onclick="toggleStep(5)">
+                <div class="step-number" id="step-number-5">5</div>
+                <div class="step-title">Настройка переменных окружения</div>
+            </div>
+            <div class="step-content">
+                <p>Создайте файл с настройками приложения:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Копирование файла настроек</span>
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'cp env.example .env')">Копировать</button>
+                    </div>
+                    <pre>cp env.example .env</pre>
+                </div>
+
+                <div class="info">
+                    На Windows используйте команду: <code>copy env.example .env</code>
+                </div>
+
+                <p>Откройте файл <code>.env</code> в текстовом редакторе и измените следующие параметры:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Основные настройки в .env</span>
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'DATABASE_URL=postgresql://postgres:ВАШ_ПАРОЛЬ@localhost:5432/srecha_invoice\nJWT_SECRET=ваш_очень_длинный_и_сложный_секретный_ключ_для_jwt\nPORT=3000\nNODE_ENV=development\nFRONTEND_URL=http://localhost:8080')">Копировать</button>
+                    </div>
+                    <pre>DATABASE_URL=postgresql://postgres:ВАШ_ПАРОЛЬ@localhost:5432/srecha_invoice
+JWT_SECRET=ваш_очень_длинный_и_сложный_секретный_ключ_для_jwt
+PORT=3000
+NODE_ENV=development
+FRONTEND_URL=http://localhost:8080</pre>
+                </div>
+
+                <div class="warning">
+                    <strong>Важно:</strong> Замените "ВАШ_ПАРОЛЬ" на реальный пароль от PostgreSQL, а JWT_SECRET на длинную случайную строку (минимум 32 символа).
+                </div>
+
+                <div class="checklist">
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Файл .env создан</span>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>DATABASE_URL настроен с правильным паролем</span>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>JWT_SECRET установлен</span>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Другие параметры проверены</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Шаг 6: Миграции базы данных -->
+        <div class="step" id="step-6">
+            <div class="step-header" onclick="toggleStep(6)">
+                <div class="step-number" id="step-number-6">6</div>
+                <div class="step-title">Создание структуры базы данных</div>
+            </div>
+            <div class="step-content">
+                <p>Создайте таблицы в базе данных:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Запуск миграций</span>
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'npm run migrate')">Копировать</button>
+                    </div>
+                    <pre>npm run migrate</pre>
+                </div>
+
+                <div class="info">
+                    Эта команда создаст все необходимые таблицы в базе данных: пользователи, клиенты, товары, инвойсы, отпремницы, группы товаров и логи.
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Заполнение начальными данными</span>
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'npm run seed')">Копировать</button>
+                    </div>
+                    <pre>npm run seed</pre>
+                </div>
+
+                <div class="success">
+                    После выполнения команды seed будут созданы пользователи по умолчанию:
+                    <ul>
+                        <li><strong>Админ:</strong> BrankoFND / MoskvaSlezamNeVeryt2024</li>
+                        <li><strong>Тест:</strong> тест / тест</li>
+                    </ul>
+                </div>
+
+                <div class="checklist">
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Миграции выполнены успешно</span>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Начальные данные загружены</span>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Пользователи по умолчанию созданы</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Шаг 7: Запуск сервера -->
+        <div class="step" id="step-7">
+            <div class="step-header" onclick="toggleStep(7)">
+                <div class="step-number" id="step-number-7">7</div>
+                <div class="step-title">Запуск сервера</div>
+            </div>
+            <div class="step-content">
+                <p>Запустите backend-сервер:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Запуск в режиме разработки</span>
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'npm run dev')">Копировать</button>
+                    </div>
+                    <pre>npm run dev</pre>
+                </div>
+
+                <div class="info">
+                    Для продакшена используйте: <code>npm start</code>
+                </div>
+
+                <div class="success">
+                    Если все настроено правильно, вы увидите сообщения:
+                    <ul>
+                        <li>🔗 Connected to PostgreSQL database</li>
+                        <li>🚀 Srecha Invoice Backend running on port 3000</li>
+                    </ul>
+                </div>
+
+                <p>Проверьте работу API:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Проверка API</span>
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'curl http://localhost:3000/health')">Копировать</button>
+                    </div>
+                    <pre>curl http://localhost:3000/health</pre>
+                </div>
+
+                <div class="info">
+                    Также можете открыть в браузере: <a href="http://localhost:3000/health" class="link" target="_blank">http://localhost:3000/health</a>
+                </div>
+
+                <div class="checklist">
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Сервер запустился без ошибок</span>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Health check возвращает статус OK</span>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Подключение к базе данных работает</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Шаг 8: Запуск frontend -->
+        <div class="step" id="step-8">
+            <div class="step-header" onclick="toggleStep(8)">
+                <div class="step-number" id="step-number-8">8</div>
+                <div class="step-title">Запуск frontend приложения</div>
+            </div>
+            <div class="step-content">
+                <p>Откройте файл <code>index.html</code> в браузере:</p>
+
+                <div class="info">
+                    Есть несколько способов запустить frontend:
+                </div>
+
+                <h4>Способ 1: Простой HTTP сервер</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Установка http-server</span>
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'npm install -g http-server')">Копировать</button>
+                    </div>
+                    <pre>npm install -g http-server</pre>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">Запуск frontend</span>
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'http-server . -p 8080 -c-1')">Копировать</button>
+                    </div>
+                    <pre>http-server . -p 8080 -c-1</pre>
+                </div>
+
+                <h4>Способ 2: Через браузер</h4>
+                <div class="info">
+                    Просто откройте файл <code>index.html</code> двойным кликом или перетащите его в браузер.
+                </div>
+
+                <div class="warning">
+                    При открытии через файл могут возникнуть проблемы с CORS. Рекомендуется использовать http-server.
+                </div>
+
+                <div class="success">
+                    Откройте в браузере: <a href="http://localhost:8080" class="link" target="_blank">http://localhost:8080</a>
+                </div>
+
+                <h4>Первый вход в систему</h4>
+                <div class="info">
+                    Используйте учетные данные:
+                    <ul>
+                        <li><strong>Логин:</strong> BrankoFND</li>
+                        <li><strong>Пароль:</strong> MoskvaSlezamNeVeryt2024</li>
+                    </ul>
+                    или
+                    <ul>
+                        <li><strong>Логин:</strong> тест</li>
+                        <li><strong>Пароль:</strong> тест</li>
+                    </ul>
+                </div>
+
+                <div class="checklist">
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Frontend запущен</span>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Страница открывается в браузере</span>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Вход в систему работает</span>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheckbox(this)">
+                        <div class="checkbox"></div>
+                        <span>Все функции приложения доступны</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn" id="prevBtn" onclick="previousStep()" disabled>← Предыдущий</button>
+            <button class="btn" id="nextBtn" onclick="nextStep()">Следующий →</button>
+        </div>
+
+        <div class="success" style="margin-top: 30px; text-align: center;">
+            <h2>🎉 Поздравляем!</h2>
+            <p>Система Srecha Invoice успешно развернута и готова к работе!</p>
+            <p>Теперь вы можете управлять клиентами, товарами, инвойсами и отпремницами.</p>
+        </div>
+    </div>
+
+    <div class="floating-help" onclick="openHelp()">?</div>
+
+    <div class="help-modal" id="helpModal">
+        <div class="help-content">
+            <span class="close" onclick="closeHelp()">&times;</span>
+            <h2>🆘 Помощь</h2>
+            <h3>Часто задаваемые вопросы:</h3>
+            
+            <h4>❓ Ошибка подключения к базе данных</h4>
+            <p>Проверьте:</p>
+            <ul>
+                <li>Запущен ли PostgreSQL</li>
+                <li>Правильно ли указан пароль в .env файле</li>
+                <li>Существует ли база данных srecha_invoice</li>
+            </ul>
+
+            <h4>❓ npm install завершается с ошибкой</h4>
+            <p>Попробуйте:</p>
+            <ul>
+                <li>Очистить кэш: <code>npm cache clean --force</code></li>
+                <li>Удалить node_modules и package-lock.json</li>
+                <li>Запустить npm install заново</li>
+            </ul>
+
+            <h4>❓ Сервер не запускается</h4>
+            <p>Проверьте:</p>
+            <ul>
+                <li>Свободен ли порт 3000</li>
+                <li>Правильно ли настроен .env файл</li>
+                <li>Выполнены ли миграции</li>
+            </ul>
+
+            <h4>❓ Frontend не подключается к backend</h4>
+            <p>Убедитесь:</p>
+            <ul>
+                <li>Backend запущен на порту 3000</li>
+                <li>Frontend использует правильный URL API</li>
+                <li>Нет блокировки CORS</li>
+            </ul>
+
+            <h4>📧 Техподдержка</h4>
+            <p>Если проблема не решается, создайте issue в репозитории проекта или обратитесь к разработчику.</p>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 8;
+
+        function updateProgress() {
+            const progress = ((currentStep - 1) / totalSteps) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `Шаг ${currentStep} из ${totalSteps}`;
+        }
+
+        function toggleStep(stepNumber) {
+            const step = document.getElementById(`step-${stepNumber}`);
+            const stepNumber_elem = document.getElementById(`step-number-${stepNumber}`);
+            
+            if (stepNumber <= currentStep) {
+                step.classList.toggle('active');
+                if (stepNumber < currentStep) {
+                    step.classList.add('completed');
+                    stepNumber_elem.classList.add('completed');
+                }
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                // Mark current step as completed
+                const currentStepElem = document.getElementById(`step-${currentStep}`);
+                const currentStepNumber = document.getElementById(`step-number-${currentStep}`);
+                currentStepElem.classList.add('completed');
+                currentStepElem.classList.remove('active');
+                currentStepNumber.classList.add('completed');
+
+                currentStep++;
+                
+                // Activate next step
+                const nextStepElem = document.getElementById(`step-${currentStep}`);
+                nextStepElem.classList.add('active');
+                
+                updateProgress();
+                updateButtons();
+                
+                // Scroll to next step
+                nextStepElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                // Deactivate current step
+                const currentStepElem = document.getElementById(`step-${currentStep}`);
+                currentStepElem.classList.remove('active');
+                
+                currentStep--;
+                
+                // Activate previous step
+                const prevStepElem = document.getElementById(`step-${currentStep}`);
+                const prevStepNumber = document.getElementById(`step-number-${currentStep}`);
+                prevStepElem.classList.add('active');
+                prevStepElem.classList.remove('completed');
+                prevStepNumber.classList.remove('completed');
+                
+                updateProgress();
+                updateButtons();
+                
+                // Scroll to previous step
+                prevStepElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function updateButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.disabled = currentStep === 1;
+            nextBtn.disabled = currentStep === totalSteps;
+            
+            if (currentStep === totalSteps) {
+                nextBtn.textContent = 'Завершено ✓';
+            } else {
+                nextBtn.textContent = 'Следующий →';
+            }
+        }
+
+        function toggleCheckbox(item) {
+            const checkbox = item.querySelector('.checkbox');
+            checkbox.classList.toggle('checked');
+            
+            // Check if all checkboxes in current step are checked
+            const currentStepElem = document.getElementById(`step-${currentStep}`);
+            const checkboxes = currentStepElem.querySelectorAll('.checkbox');
+            const checkedBoxes = currentStepElem.querySelectorAll('.checkbox.checked');
+            
+            if (checkboxes.length === checkedBoxes.length && checkboxes.length > 0) {
+                // All checkboxes are checked, enable next button
+                document.getElementById('nextBtn').style.background = 'linear-gradient(45deg, #4CAF50, #45a049)';
+            }
+        }
+
+        async function copyToClipboard(button, text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                const originalText = button.textContent;
+                button.textContent = 'Скопировано!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            } catch (err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                button.textContent = 'Скопировано!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = 'Копировать';
+                    button.classList.remove('copied');
+                }, 2000);
+            }
+        }
+
+        function openHelp() {
+            document.getElementById('helpModal').style.display = 'block';
+        }
+
+        function closeHelp() {
+            document.getElementById('helpModal').style.display = 'none';
+        }
+
+        // Close help modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('helpModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+            updateButtons();
+            
+            // Activate first step
+            document.getElementById('step-1').classList.add('active');
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey || e.metaKey) {
+                    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        nextStep();
+                    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        previousStep();
+                    }
+                }
+                
+                if (e.key === 'F1') {
+                    e.preventDefault();
+                    openHelp();
+                }
+                
+                if (e.key === 'Escape') {
+                    closeHelp();
+                }
+            });
+        });
+
+        // Auto-scroll progress tracking
+        window.addEventListener('scroll', function() {
+            const steps = document.querySelectorAll('.step');
+            const scrollPos = window.scrollY + window.innerHeight / 2;
+            
+            steps.forEach((step, index) => {
+                const rect = step.getBoundingClientRect();
+                const stepTop = rect.top + window.scrollY;
+                const stepBottom = stepTop + rect.height;
+                
+                if (scrollPos >= stepTop && scrollPos <= stepBottom) {
+                    // Auto-activate step when scrolled into view
+                    if (index + 1 !== currentStep && index + 1 <= currentStep + 1) {
+                        // Allow activation of current or next step only
+                        step.classList.add('active');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
